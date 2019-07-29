@@ -8,6 +8,8 @@
 
 如图所示：
 
+![1](https://github.com/hcsp/read-github-pull-requests/blob/master/pull-screenshot.png)
+
 你可以自由选择你喜欢的任何第三方库，我们也不限制你使用GitHub的API。你可以从以下方法中挑选一种完成挑战：
 
 - 按照课上所学，直接获取页面的HTML，解析之。
