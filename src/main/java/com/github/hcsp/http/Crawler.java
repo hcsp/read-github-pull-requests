@@ -30,10 +30,6 @@ public class Crawler {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        getFirstPageOfPullRequests("gradle/gradle");
-    }
-
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> pullRequests = new ArrayList<>();
