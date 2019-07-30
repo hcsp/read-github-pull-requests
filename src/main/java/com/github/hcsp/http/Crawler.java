@@ -34,7 +34,7 @@ public class Crawler {
             String title = pr.getTitle();
             String author = "";
             try {
-                author = pr.getUser().getName();
+                author = pr.getUser().getLogin();
             } catch (IOException e) {
                 e.printStackTrace();
             }
