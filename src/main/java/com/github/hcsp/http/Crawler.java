@@ -35,28 +35,10 @@ public class Crawler {
             String[] number_temp = e.child(0).child(1).select(".text-small").text().split(" ");
             int number = Integer.valueOf(number_temp[0].substring(1));
             String title = e.child(0).child(1).child(0).text();
-            String author = e.child(0).child(1).select(".muted-link").text();
+            String author = e.child(0).child(1).select(".muted-link").first().text();
             response.add(new GitHubPullRequest(number, title, author));
         }
         return response;
     }
 
-
-
-    /*public static void main(String[] args)throws Exception {
-        ArrayList<GitHubPullRequest> response = new ArrayList<>();
-        String url = "https://github.com/golang/go/pulls";
-        Document doc = Jsoup.connect(url).get();
-        Elements elements = doc.select(".js-issue-row");
-        for (Element e : elements){
-            String[] number_temp = e.child(0).child(1).child(3).child(0).text().split(" ");
-            int number = Integer.valueOf(number_temp[0].substring(1));
-            String title = e.child(0).child(1).child(0).text();
-            String author = e.child(0).child(1).child(3).child(0).select(".muted-link").text();
-            response.add(new GitHubPullRequest(number,title,author));
-        }
-
-    }
-
-     */
 }
