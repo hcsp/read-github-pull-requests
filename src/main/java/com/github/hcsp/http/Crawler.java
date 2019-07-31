@@ -1,11 +1,10 @@
 package com.github.hcsp.http;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -44,19 +43,15 @@ public class Crawler {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(Uri);
         CloseableHttpResponse response = httpclient.execute(httpGet);
-        try {
-            HttpEntity entity = response.getEntity();
-            content = IOUtils.toString(entity.getContent(), "UTF-8");
-        } finally {
-            response.close();
-        }
+        content = EntityUtils.toString(response.getEntity(), "UTF-8");
+        response.close();
         return content;
     }
 
     private static void parasToDocumentAndAddToPullRequests(String content, List<GitHubPullRequest> pullRequests) {
         Document document = Jsoup.parse(content);
         for (Element doc : document.select(".js-issue-row")) {
-            String title = " " + doc.selectFirst("a").text();
+            String title = doc.selectFirst("a").text();
 
             // 格式: #10119 opened 2 hours ago by lacasseio
             Element openedByElement = doc.selectFirst("span.opened-by");
