@@ -44,7 +44,19 @@ public class Crawler {
             return title;
         }
 
-        public GitHubListPullRequestResponse.User getUser() {
+        public void setNumber(int number) {
+            this.number = number;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+        public User getUser() {
             return user;
         }
 
