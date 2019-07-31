@@ -40,31 +40,37 @@ public class Crawler {
             return number;
         }
 
-        public String getTitle() {
-            return title;
-        }
-
         public void setNumber(int number) {
             this.number = number;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public String getTitle() {
+            return title;
         }
 
-        public void setUser(User user) {
-            this.user = user;
+
+        public void setTitle(String title) {
+            this.title = title;
         }
 
         public User getUser() {
             return user;
         }
 
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+
         static class User {
             String login;
 
             public String getLogin() {
                 return login;
+            }
+
+            public void setLogin(String login) {
+                this.login = login;
             }
         }
     }
