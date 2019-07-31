@@ -61,7 +61,7 @@ public class Crawler {
     private static void parasToDocumentAndAddToPullRequests(String content, List<GitHubPullRequest> pullRequests) {
         Document document = Jsoup.parse(content);
         for (Element doc : document.select(".js-issue-row")) {
-            String title = " " + doc.selectFirst("a").text();
+            String title = "" + doc.selectFirst("a").text();
 
             // 格式: #10119 opened 2 hours ago by lacasseio
             Element openedByElement = doc.selectFirst("span.opened-by");
