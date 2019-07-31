@@ -44,7 +44,7 @@ public class Crawler {
             return title;
         }
 
-        public User getUser() {
+        public GitHubListPullRequestResponse.User getUser() {
             return user;
         }
 
