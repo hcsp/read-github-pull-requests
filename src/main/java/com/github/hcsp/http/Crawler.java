@@ -32,9 +32,10 @@ public class Crawler {
     }
 
     static class GitHubListPullRequestResponse {
-        int number;
-        String title;
-        User user;
+        private int number;
+        private String title;
+        private User user;
+
 
         public int getNumber() {
             return number;
@@ -63,7 +64,8 @@ public class Crawler {
 
 
         static class User {
-            String login;
+
+            private String login;
 
             public String getLogin() {
                 return login;
