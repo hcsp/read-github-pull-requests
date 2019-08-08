@@ -41,7 +41,7 @@ public class Crawler {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         //创建请求方式  post  get  http://localhost:8888/demo/test/
 
-        String uri = "https://github.com/"+repo+"/pulls";
+        String uri = "https://github.com/" + repo + "/pulls";
         HttpGet httpGet = new HttpGet(uri);
         CloseableHttpResponse response = httpClient.execute(httpGet);
         //相应结果
@@ -52,10 +52,10 @@ public class Crawler {
         InputStream stream = entity.getContent();
         String html = IOUtils.toString(stream, "UTF-8");
         Document document = Jsoup.parse(html);
-        Elements elements =  document.select(".lh-condensed");
+        Elements elements = document.select(".lh-condensed");
         List<GitHubPullRequest> list = new ArrayList();
 
-        for (Element element:elements) {
+        for (Element element : elements) {
             // Pull request的编号
             int number;
             // Pull request的标题
@@ -65,7 +65,7 @@ public class Crawler {
             title = element.select(".js-navigation-open").text();
             author = element.select(".muted-link").text();
             number = Integer.parseInt(element.select(".opened-by").text().split(" ")[0].substring(1));
-            list.add(new GitHubPullRequest(number,title,author));
+            list.add(new GitHubPullRequest(number, title, author));
             System.out.println(number);
         }
         EntityUtils.consume(entity);
