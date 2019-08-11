@@ -40,7 +40,7 @@ public class Crawler {
         List<GitHubPullRequest> finalPRs = new ArrayList<>();
         for (int i = 0; i < Math.min(prs.size(), LIMIT); i++) {
             GHPullRequest pr = prs.get(i);
-            finalPRs.add(new GitHubPullRequest(pr.getNumber(), pr.getTitle(), pr.getUser().getName()));
+            finalPRs.add(new GitHubPullRequest(pr.getNumber(), pr.getTitle(), pr.getUser().getLogin()));
         }
         return finalPRs;
 
