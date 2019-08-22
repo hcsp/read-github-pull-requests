@@ -22,47 +22,31 @@ public class Crawler {
             this.title = title;
             this.author = author;
         }
+
+        @Override
+        public String toString() {
+            return number + "\n" + title + "\n" + author + "\n";
+        }
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
-//        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
-//        CloseableHttpResponse response1;
-//        response1 = httpclient.execute(httpGet);
-//        try {
-//            System.out.println(response1.getStatusLine());
-//            HttpEntity entity1 = response1.getEntity();
-//            InputStream is = entity1.getContent();
-//            String contentStr = IOUtils.toString(is, "UTF-8");
-//            System.out.println(contentStr);
-//            // do something useful with the response body
-//            // and ensure it is fully consumed
-//            EntityUtils.consume(entity1);
-//        } finally {
-//            response1.close();
-//        }
-
         Document doc = Jsoup.connect("https://github.com/" + repo + "/pulls").get();
         ArrayList<Element> issues = doc.select(".js-issue-row");
         ArrayList<GitHubPullRequest> results = new ArrayList<>();
         for (Element element : issues) {
-            System.out.println(element);
-            results.add(new GitHubPullRequest(
-                    Integer.parseInt(element.child(0).child(1).child(3).text().substring(1, 6)),
-                    element.child(0).child(1).child(0).text(),
-                    element.child(0).child(1).child(3).child(0).child(1).text()
-            ));
+            GitHubPullRequest pr = new GitHubPullRequest(
+                    Integer.parseInt(element.attr("id").substring(6)),
+                    element.select(".js-navigation-open").get(0).text(),
+                    element.select(".muted-link").get(0).text()
+            );
+            System.out.println(pr);
+            results.add(pr);
         }
-        System.out.println(results);
         return results;
-//        Elements newsHeadlines = doc.select("#mp-itn b a");
-//        for (Element headline : newsHeadlines) {
-//            System.out.println(headline.attr("title") + "\n" + headline.absUrl("href"));
-//        }
     }
 
     public static void main(String[] args) throws IOException {
-        getFirstPageOfPullRequests("gradle/gradle");
+        getFirstPageOfPullRequests("golang/go");
     }
 }
