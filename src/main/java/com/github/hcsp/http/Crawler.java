@@ -64,8 +64,8 @@ public class Crawler {
             for (Element element:Pr){
                 GitHubPullRequest pulls = new GitHubPullRequest(
                         Integer.parseInt(element.attr("id").substring(6)),
-                        element.select(".js-navigation-open").text(),
-                        element.select(".muted-link").text()
+                        element.select(".js-navigation-open").get(0).text(),
+                        element.select(".muted-link").get(0).text()
                 );
                 System.out.println(pulls);
                 list.add(pulls);
