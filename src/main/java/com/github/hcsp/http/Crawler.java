@@ -1,6 +1,20 @@
 package com.github.hcsp.http;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+
 
 public class Crawler {
     static class GitHubPullRequest {
@@ -16,8 +30,52 @@ public class Crawler {
             this.title = title;
             this.author = author;
         }
+
+        @Override
+        public String toString() {
+            return "GitHubPullRequest{" +
+                    "number=" + number +
+                    ", title='" + title + '\'' +
+                    ", author='" + author + '\'' +
+                    '}';
+        }
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://github.com/"+repo+"/pulls");
+        CloseableHttpResponse response1 = httpclient.execute(httpGet);
+
+        try {
+            System.out.println(response1.getStatusLine());
+            HttpEntity entity1 = response1.getEntity();
+
+            //获取流里面的数据
+            InputStream content = entity1.getContent();
+            String html = IOUtils.toString(content, "UTF-8");
+            //解析页面
+            Document parse = Jsoup.parse(html);
+
+            //获取Pr内容
+            ArrayList<Element> Pr = parse.select(".js-issue-row");
+            ArrayList<GitHubPullRequest> list = new ArrayList<>();
+            for (Element element:Pr){
+                GitHubPullRequest pulls = new GitHubPullRequest(
+                        Integer.parseInt(element.attr("id").substring(6)),
+                        element.select(".js-navigation-open").text(),
+                        element.select(".muted-link").text()
+                );
+                System.out.println(pulls);
+                list.add(pulls);
+            }
+            return list;
+
+        } finally {
+            response1.close();
+        }
+
+    }
+
 }
