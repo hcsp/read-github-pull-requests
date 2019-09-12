@@ -18,6 +18,8 @@
 
 我们希望能锻炼你自己搜索、阅读文档的能力——这对一个工程师是必不可少的技能，因此我们没有列出所有的细节。但是，我们仍然希望在你遇到解决不了的问题时能多思考、多问。祝你好运！
 
+在提交Pull Request之前，你应当在本地确保所有代码已经编译通过，并且通过了测试(`mvn clean test`)
+
 -----
 注意！我们只允许你修改以下文件，对其他文件的修改会被拒绝：
 - [src/main/java/com/github/hcsp/http/Crawler.java](https://github.com/hcsp/read-github-pull-requests/blob/master/src/main/java/com/github/hcsp/http/Crawler.java)
