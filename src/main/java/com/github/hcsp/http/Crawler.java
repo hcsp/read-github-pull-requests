@@ -44,8 +44,6 @@ public class Crawler {
         try {
             HttpEntity entity1 = response1.getEntity();
             InputStream content = entity1.getContent();
-            // do something useful with the response body
-            // and ensure it is fully consumed
             String text = IOUtils.toString(content);
             Document document = Jsoup.parse(text);
             ArrayList<Element> issue = new Elements(document).select("div[class=\"float-left col-8 lh-condensed p-2\"]");
@@ -59,7 +57,6 @@ public class Crawler {
         } finally {
             response1.close();
         }
-        System.out.println(pullRequest);
         return pullRequest;
     }
 }
