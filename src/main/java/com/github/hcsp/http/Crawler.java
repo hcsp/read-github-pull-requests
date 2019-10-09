@@ -8,7 +8,7 @@ public class Crawler {
         int number;
         // Pull request的标题
         String title;
-        // Pull request的作者的GitHub id
+        // Pull request的作者的 GitHub 用户名
         String author;
 
         GitHubPullRequest(int number, String title, String author) {
