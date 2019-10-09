@@ -47,9 +47,9 @@ public class Crawler {
             Document document = Jsoup.parse(text);
             ArrayList<Element> issue = new Elements(document).select("div[class=\"float-left col-8 lh-condensed p-2\"]");
             for (Element element : issue) {
-                String pullTitle = (element.select("a[data-hovercard-type=\"pull_request\"]").text());//题目
-                int pullNumber = Integer.parseInt(element.select("span[class=\"opened-by\"]").text().substring(1, 6));//编号
-                String pullName = element.select("span[class=\"opened-by\"]").select("a").text();//名字
+                String pullTitle = (element.select("a[data-hovercard-type=\"pull_request\"]").text());
+                int pullNumber = Integer.parseInt(element.select("span[class=\"opened-by\"]").text().substring(1, 6));
+                String pullName = element.select("span[class=\"opened-by\"]").select("a").text();
                 pullRequest.add(new GitHubPullRequest(pullNumber, pullTitle, pullName));
             }
             EntityUtils.consume(entity1);
