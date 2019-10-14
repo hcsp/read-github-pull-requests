@@ -57,11 +57,7 @@ public class Crawler {
                 String title = pr.getString("title");
                 String author = pr.getJSONObject("user").getString("login");
                 pullRequest.add(new GitHubPullRequest(number, title, author));
-
-
             }
-
-
             // do something useful with the response body
             // and ensure it is fully consumed
             EntityUtils.consume(entity1);
