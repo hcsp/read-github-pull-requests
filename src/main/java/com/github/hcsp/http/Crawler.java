@@ -1,7 +1,9 @@
 package com.github.hcsp.http;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,18 +21,63 @@ public class Crawler {
         int number;
         // Pull request的标题
         String title;
-        // Pull request的作者的 GitHub 用户名
-        String author;
+        User user;
 
-        GitHubPullRequest(int number, String title, String author) {
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
             this.number = number;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
             this.title = title;
-            this.author = author;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+        @Override
+        public String toString() {
+            return "GitHubPullRequest{" +
+                    "number=" + number +
+                    ", title='" + title + '\'' +
+                    ", user=" + user +
+                    '}';
+        }
+    }
+
+    static class User {
+        private String login;
+
+        public String getLogin() {
+            return login;
+        }
+
+        public void setLogin(String login) {
+            this.login = login;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "login='" + login + '\'' +
+                    '}';
         }
     }
 
     public static void main(String[] args) throws IOException {
-        getFirstPageOfPullRequests("gradle/gradle");
+        System.out.println(getFirstPageOfPullRequests("gradle/gradle"));
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
@@ -51,17 +98,8 @@ public class Crawler {
                     // return it as a String
                     String result = EntityUtils.toString(entity);
 
-                    JSONArray jsonArray = JSONArray.parseArray(result);
-                    for (Object object : jsonArray) {
-                        JSONObject jsonObjectOne = (JSONObject) object;
-                        String title = jsonObjectOne.getString("title");
-                        JSONObject authorObj = jsonObjectOne.getJSONObject("user");
-                        String author = authorObj.getString("login");
-                        Integer number = jsonObjectOne.getInteger("number");
-                        pullRequestsItem = new GitHubPullRequest(number, title, author);
-                        pullRequestsList.add(pullRequestsItem);
-                    }
-                    return pullRequestsList;
+                    return JSON.parseObject(result, new TypeReference<List<GitHubPullRequest>>() {
+                    });
                 }
 
             } finally {
