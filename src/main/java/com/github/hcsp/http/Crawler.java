@@ -1,6 +1,8 @@
 package com.github.hcsp.http;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -29,26 +31,34 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls?page=1");
-        CloseableHttpResponse response = httpclient.execute(httpGet);
-        HttpEntity httpEntity = response.getEntity();
-        String res = EntityUtils.toString(httpEntity);
-        response.close();
+        String res = null;
+        CloseableHttpResponse response = null;
+        try {
+            CloseableHttpClient httpclient = HttpClients.createDefault();
+            HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls?page=1");
+            response = httpclient.execute(httpGet);
+            HttpEntity httpEntity = response.getEntity();
+            res = EntityUtils.toString(httpEntity);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
         List<GitHubPullRequest> gitHubPullRequests = null;
         if (res != null) {
-            List<LinkedHashMap> result = JSON.parseArray(res, LinkedHashMap.class);
-            if (result != null) {
+            JSONArray jsonArray = JSON.parseArray(res);
+            if (jsonArray != null) {
                 gitHubPullRequests = new ArrayList<>();
-                for (LinkedHashMap map : result) {
-                    int number = (int) map.get("number");
-                    String title = map.get("title").toString();
-                    String author = ((Map) map.get("user")).get("login").toString();
-                    GitHubPullRequest request = new GitHubPullRequest(number, title, author);
-                    gitHubPullRequests.add(request);
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    int number = jsonObject.getInteger("number");
+                    String title = jsonObject.getString("title");
+                    String login = jsonObject.getJSONObject("user").getString("login");
+                    gitHubPullRequests.add(new GitHubPullRequest(number, title, login));
                 }
             }
         }
         return gitHubPullRequests;
     }
+
 }
