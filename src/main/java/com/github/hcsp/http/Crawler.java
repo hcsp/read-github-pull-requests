@@ -64,6 +64,7 @@ public class Crawler {
             for (Element element : issues) {
                 String UserNameGroup;
                 System.out.println(element.attr("id"));
+                System.out.println(Integer.valueOf(element.attr("id").substring(6)));
 
                 System.out.println(element.child(0).child(1).child(0).text());
                 System.out.println(element.child(0).child(1).child(0).attr("href"));
@@ -78,7 +79,7 @@ public class Crawler {
                 }
                 // System.out.println(element);
 
-                GitHubPullRequest a = new GitHubPullRequest(Integer.valueOf(element.attr("id")),element.child(0).child(1).child(0).text(), UserNameGroup);
+                GitHubPullRequest a = new GitHubPullRequest(Integer.valueOf(element.attr("id").substring(6)),element.child(0).child(1).child(0).text(), UserNameGroup);
 
                 list.add(a);
 
