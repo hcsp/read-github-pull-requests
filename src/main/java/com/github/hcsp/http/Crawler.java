@@ -6,12 +6,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,9 +31,9 @@ public class Crawler {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        getFirstPageOfPullRequests("gradle/gradle");
-    }
+//    public static void main(String[] args) throws IOException {
+//        getFirstPageOfPullRequests("gradle/gradle");
+//    }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
@@ -63,23 +60,25 @@ public class Crawler {
 
             for (Element element : issues) {
                 String UserNameGroup;
-                System.out.println(element.attr("id"));
-                System.out.println(Integer.valueOf(element.attr("id").substring(6)));
+//                System.out.println(element.attr("id"));
+//                System.out.println(element.child(0).child(1).child(2).attr("class"));
+//                System.out.println(element.child(0).child(1).child(2).text());
+//                System.out.println(element.child(0).child(1).child(2).text().indexOf("from:"));
 
-                System.out.println(element.child(0).child(1).child(0).text());
-                System.out.println(element.child(0).child(1).child(0).attr("href"));
-                if (element.child(0).child(1).child(2).attr("class") == "labels lh-default") {
-                    UserNameGroup=element.child(0).child(1).child(3).child(0).child(1).text();
-                    System.out.println(element.child(0).child(1).child(3).child(0).child(1).text());
-                    System.out.println(element.child(0).child(1).child(3).child(0).child(1).attr("href"));
+//                System.out.println(element.child(0).child(1).child(0).text());
+//                System.out.println(element.child(0).child(1).child(0).attr("href"));
+                if (element.child(0).child(1).child(2).text().indexOf("from:") != -1) {
+                    UserNameGroup = element.child(0).child(1).child(3).child(0).child(1).text();
+//                    System.out.println(element.child(0).child(1).child(3).child(0).child(1).text());
+//                    System.out.println(element.child(0).child(1).child(3).child(0).child(1).attr("href"));
                 } else {
-                    UserNameGroup=element.child(0).child(1).child(2).child(0).child(1).text();
-                    System.out.println(element.child(0).child(1).child(2).child(0).child(1).text());
-                    System.out.println(element.child(0).child(1).child(2).child(0).child(1).attr("href"));
+                    UserNameGroup = element.child(0).child(1).child(2).child(0).child(1).text();
+//                    System.out.println(element.child(0).child(1).child(2).child(0).child(1).text());
+//                    System.out.println(element.child(0).child(1).child(2).child(0).child(1).attr("href"));
                 }
                 // System.out.println(element);
 
-                GitHubPullRequest a = new GitHubPullRequest(Integer.valueOf(element.attr("id").substring(6)),element.child(0).child(1).child(0).text(), UserNameGroup);
+                GitHubPullRequest a = new GitHubPullRequest(Integer.valueOf(element.attr("id").substring(6)), element.child(0).child(1).child(0).text(), UserNameGroup);
 
                 list.add(a);
 
