@@ -50,26 +50,18 @@ public class Crawler {
         } finally {
             response.close();
         }
-        if (document != null){
+        if (document != null) {
             list = new ArrayList<>();
             Elements elements = document.select(".Box-row");
 
-            for (Element element:elements){
+            for (Element element : elements) {
                 String title = element.child(0).child(1).child(0).text();
-                List<String > arr = Arrays.asList(element.child(0).child(1).child(3).child(0).text().split(" "));
-                int number = Integer.parseInt(arr.get(0).replaceAll("#",""));
-                String author = arr.get(arr.size()-1);
-                list.add(new GitHubPullRequest(number,title,author));
+                List<String> arr = Arrays.asList(element.child(0).child(1).child(3).child(0).text().split(" "));
+                int number = Integer.parseInt(arr.get(0).replaceAll("#", ""));
+                String author = arr.get(arr.size() - 1);
+                list.add(new GitHubPullRequest(number, title, author));
             }
         }
         return list;
-    }
-
-    public static void main(String[] args) {
-        try {
-            getFirstPageOfPullRequests("gradle/gradle");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
