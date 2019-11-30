@@ -1,17 +1,16 @@
 package com.github.hcsp.http;
 
-import org.apache.commons.io.IOUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class Crawler {
 
         @Override
         public String toString() {
-            return getNumber() + " #### " + getTitle() + " #### " + getAuthor() + "\n";
+            return getNumber() + " ### " + getTitle() + " ### " + getAuthor();
         }
     }
 
@@ -52,62 +51,31 @@ public class Crawler {
 
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
 
-        List<GitHubPullRequest> information = new ArrayList<>();
-
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("http://github.com/" + repo + "/pulls");
-        CloseableHttpResponse response1 = httpclient.execute(httpGet);
-
+        List<GitHubPullRequest> pullRequests = new ArrayList<>();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls?state=all&page=1");
+        CloseableHttpResponse response = null;
         try {
-            System.out.println(response1.getStatusLine());
-            HttpEntity entity1 = response1.getEntity();
-            // do something useful with the response body
-            // and ensure it is fully consumed
-            InputStream is = entity1.getContent();
-
-            String html = IOUtils.toString(is, "UTF-8");
-
-            Document doc = Jsoup.parse(html);
-
-            ArrayList<Element> issues = doc.select(".js-issue-row");
+            response = httpClient.execute(httpGet);
+            System.out.println(response.getStatusLine());
+            HttpEntity entity = response.getEntity();
 
             String author;
+            int number;
             String title;
-            String numberS;
-            int numberI;
-            String str = "";
-            List<GitHubPullRequest> string = new ArrayList<>();
-            for (Element element : issues) {
-
-
-                numberS = element.child(0).child(1).child(3).child(0).text();
-                for (String part : numberS.split(" |", 2)) {
-                    str = part;
-                }
-                for (String part : str.split(" ", 2)) {
-                    str = part;
-                    break;
-                }
-
-                numberI = Integer.parseInt(str);
-                title = element.child(0).child(1).child(0).text();
-                author = element.child(0).child(1).child(3).child(0).child(1).text();
-
-                GitHubPullRequest temp = new GitHubPullRequest(numberI, title, author);
-                information.add(temp);
+            String str = EntityUtils.toString(entity);
+            JSONArray jsonArray = JSONArray.parseArray(str);
+            for (Object object : jsonArray) {
+                JSONObject jsonObject = (JSONObject) object;
+                title = jsonObject.getString("title");
+                number = jsonObject.getInteger("number");
+                author = jsonObject.getJSONObject("user").getString("login");
+                pullRequests.add(new GitHubPullRequest(number, title, author));
             }
-
-            EntityUtils.consume(entity1);
+            return pullRequests;
         } finally {
-            response1.close();
-        }
-        return information;
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        for (GitHubPullRequest member : getFirstPageOfPullRequests("gradle/gradle")) {
-            System.out.println(member);
+            httpClient.close();
+            response.close();
         }
     }
 }
