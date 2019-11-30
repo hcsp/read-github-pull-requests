@@ -44,7 +44,6 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.10</version>
         </dependency>
-
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-github</artifactId>
@@ -57,7 +56,6 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.62</version>
         </dependency>
-
     </dependencies>
 
     <build>

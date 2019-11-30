@@ -59,7 +59,6 @@ public class Crawler {
             response = httpClient.execute(httpGet);
             System.out.println(response.getStatusLine());
             HttpEntity entity = response.getEntity();
-
             String author;
             int number;
             String title;
