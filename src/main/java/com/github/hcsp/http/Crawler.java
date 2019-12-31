@@ -32,7 +32,7 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo){
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(String.format("https://api.github.com/repos/%s/pulls?state=open&page=1", repo));
         CloseableHttpResponse response1 = null;
@@ -50,7 +50,7 @@ public class Crawler {
             String s = IOUtils.toString(is, "UTF-8");
             JSONArray arr = JSON.parseArray(s);
 
-            for(int i = 0; i < arr.size(); i++){
+            for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 String author = obj.getJSONObject("user").getString("login");
                 String title = obj.getString("title");
