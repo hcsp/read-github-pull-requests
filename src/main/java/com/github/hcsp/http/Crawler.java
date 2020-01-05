@@ -59,29 +59,27 @@ public class Crawler {
         //CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
         String url = GITHUB_PULL_REQUEST_URL_HEAD + repo + GITHUB_PULL_REQUEST_URL_FOOT;
         HttpGet httpGet = new HttpGet(url);
-        CloseableHttpResponse response1 = httpclient.execute(httpGet);
+        CloseableHttpResponse response = httpclient.execute(httpGet);
         List<GitHubPullRequest> gitHubPullRequestList = new ArrayList<>();
         try {
-            HttpEntity entity = response1.getEntity();
+            HttpEntity entity = response.getEntity();
             // do something useful with the response body
             // and ensure it is fully consumed
             InputStream inputStream = entity.getContent();
             String html = IOUtils.toString(inputStream, "UTF-8");
-            Document document = Jsoup.parse(html);
             List<Map<String, Object>> pulls = (List) JSON.parse(html);
             for (Map<String, Object> pull :
                     pulls) {
                 int number = (int) pull.get("number");
-                String title = pull.get("number").toString();
+                String title = pull.get("title").toString();
                 Map<String, Object> user = (Map<String, Object>) pull.get("user");
                 String login = user.get("login").toString();
                 GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, login);
                 gitHubPullRequestList.add(gitHubPullRequest);
             }
-            System.out.println(gitHubPullRequestList);
             EntityUtils.consume(entity);
         } finally {
-            response1.close();
+            response.close();
         }
         return gitHubPullRequestList;
     }
