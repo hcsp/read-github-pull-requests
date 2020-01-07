@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
+    public  static final List<GitHubPullRequest> pullList=new ArrayList<>();
     static class GitHubPullRequest {
-        public static final List<GitHubPullRequest> pullList=new ArrayList<>();
         // Pull request的编号
         int number;
         // Pull request的标题
@@ -27,16 +27,7 @@ public class Crawler {
             this.title = title;
             this.author = author;
         }
-        public static void addtoList(Object o) {
-            if(o instanceof JSONObject){
-                JSONObject o1 = (JSONObject) o;
-                String number = o1.getString("number");
-                String tittle = o1.getString("title");
-                JSONObject user = o1.getJSONObject("user");
-                String ID = user.getString("login");
-                pullList.add(new GitHubPullRequest(Integer.parseInt(number),tittle,ID));
-            }
-        }
+
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
@@ -47,10 +38,20 @@ public class Crawler {
             InputStream is = response.body().byteStream();
             String json = IOUtils.toString(is, "UTF-8");
             JSONArray jsonArray = JSONArray.parseArray(json);
-            jsonArray.forEach(GitHubPullRequest::addtoList);
+            jsonArray.forEach(Crawler::addtoList);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return GitHubPullRequest.pullList;
+        return pullList;
+    }
+    public static void addtoList(Object o) {
+        if(o instanceof JSONObject){
+            JSONObject o1 = (JSONObject) o;
+            String number = o1.getString("number");
+            String tittle = o1.getString("title");
+            JSONObject user = o1.getJSONObject("user");
+            String ID = user.getString("login");
+            pullList.add(new GitHubPullRequest(Integer.parseInt(number),tittle,ID));
+        }
     }
 }
