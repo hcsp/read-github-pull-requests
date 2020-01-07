@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
-    public  static final List<GitHubPullRequest> pullList=new ArrayList<>();
+    public static final List<GitHubPullRequest> pullList = new ArrayList<>();
+
     static class GitHubPullRequest {
         // Pull request的编号
         int number;
@@ -44,14 +45,15 @@ public class Crawler {
         }
         return pullList;
     }
+
     public static void addtoList(Object o) {
-        if(o instanceof JSONObject){
+        if (o instanceof JSONObject) {
             JSONObject o1 = (JSONObject) o;
             String number = o1.getString("number");
             String tittle = o1.getString("title");
             JSONObject user = o1.getJSONObject("user");
             String ID = user.getString("login");
-            pullList.add(new GitHubPullRequest(Integer.parseInt(number),tittle,ID));
+            pullList.add(new GitHubPullRequest(Integer.parseInt(number), tittle, ID));
         }
     }
 }
