@@ -34,6 +34,7 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+        List<GitHubPullRequest> gitHubPullRequestList = new ArrayList<>();
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
@@ -50,17 +51,17 @@ public class Crawler {
 
             for (Element element :
                     issues) {
-                System.out.println(element.child(0).child(1).child(0).text());
-                System.out.println(element.child(0).child(1).child(3).child(0).text());
-                System.out.println(element.child(0).child(1).child(3).child(0).child(1).text());
+                String numberTempe = element.child(0).select(".col-8").get(0).select(".mt-1").get(0).select(".opened-by").get(0).getElementsByTag("span").get(0).text();
+                int number = Integer.parseInt(numberTempe.split(" ")[0].substring(1));
+
+                String title = element.child(0).select(".col-8").get(0).select(".link-gray-dark").get(0).text();
+                String author = element.child(0).select(".col-8").get(0).select(".mt-1").get(0).getElementsByTag("a").get(0).text();
+
+                gitHubPullRequestList.add(new GitHubPullRequest(number, title, author));
             }
 
         }
 
-        return null;
-    }
-
-    public static void main(String[] args) throws IOException {
-        getFirstPageOfPullRequests("gradle/gradle");
+        return gitHubPullRequestList;
     }
 }
