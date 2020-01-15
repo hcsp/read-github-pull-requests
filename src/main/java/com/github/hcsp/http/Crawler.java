@@ -36,32 +36,41 @@ public class Crawler {
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> gitHubPullRequestList = new ArrayList<>();
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
-        try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-            System.out.println(response.getStatusLine());
-            HttpEntity entity = response.getEntity();
-            InputStream is = entity.getContent();
+        String html = IOUtils.toString(getHtmlInputStream(repo), StandardCharsets.UTF_8);
 
-            String html = IOUtils.toString(is, StandardCharsets.UTF_8);
+        //将网页解析为Document 对象
+        Document document = Jsoup.parse(html);
 
-            Document document = Jsoup.parse(html);
+        //用CSS 的选择器筛选到issue 列表所在行
+        ArrayList<Element> issues = document.select(".js-issue-row");
 
-            ArrayList<Element> issues = document.select(".js-issue-row");
+        for (Element element :
+                issues) {
+            String numberTempe = element.child(0).select(".col-8").get(0).select(".mt-1").get(0).select(".opened-by").get(0).getElementsByTag("span").get(0).text();
+            int number = Integer.parseInt(numberTempe.split(" ")[0].substring(1));
 
-            for (Element element :
-                    issues) {
-                String numberTempe = element.child(0).select(".col-8").get(0).select(".mt-1").get(0).select(".opened-by").get(0).getElementsByTag("span").get(0).text();
-                int number = Integer.parseInt(numberTempe.split(" ")[0].substring(1));
+            String title = element.child(0).select(".col-8").get(0).select(".link-gray-dark").get(0).text();
+            String author = element.child(0).select(".col-8").get(0).select(".mt-1").get(0).getElementsByTag("a").get(0).text();
 
-                String title = element.child(0).select(".col-8").get(0).select(".link-gray-dark").get(0).text();
-                String author = element.child(0).select(".col-8").get(0).select(".mt-1").get(0).getElementsByTag("a").get(0).text();
-
-                gitHubPullRequestList.add(new GitHubPullRequest(number, title, author));
-            }
-
+            gitHubPullRequestList.add(new GitHubPullRequest(number, title, author));
         }
+
 
         return gitHubPullRequestList;
     }
+
+    public static InputStream getHtmlInputStream(String repo) {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
+        try {
+            CloseableHttpResponse response = httpclient.execute(httpGet);
+            System.out.println(response.getStatusLine());
+            HttpEntity entity = response.getEntity();
+            return entity.getContent();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
