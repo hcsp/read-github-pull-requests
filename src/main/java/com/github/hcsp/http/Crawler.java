@@ -52,18 +52,22 @@ public class Crawler {
             for (Element element : newsHeadlines) {
 
                 //System.out.println(element);
-
                 //System.out.println(element.child(0).child(1).select("a").text());
-                String titleText = element.child(0).child(1).select("a").text();
-                String title = titleText.substring(0, titleText.lastIndexOf(" "));
+                String titleTest = element.child(0).child(1).select("a").text();
+                String title = titleTest.substring(0, titleTest.lastIndexOf(" ") - 1);
 
-                //System.out.println(element.child(0).child(1).select(".text-gray").select(".opened-by").select("span").text());
+                //System.out.println(title);
+                //System.out.println(element.child(0).child(1).select(".text-gray").select("span").text());
+
                 String span = element.child(0).child(1).select(".text-gray").select(".opened-by").select("span").text();
                 int number = Integer.parseInt(span.substring(0, span.indexOf(" ")).replace("#", ""));
 
+                //System.out.println(number);
 
-                //System.out.println(element.child(0).child(1).select(".text-gray").select(".opened-by").select("span").select("a").text());
+                //System.out.println(element.child(0).child(1).select(".text-gray").select("span").select("a").text());
+
                 String author = element.child(0).child(1).select(".text-gray").select(".opened-by").select("span").select("a").text();
+                //System.out.println(author);
 
                 GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
                 gitHubPullRequestList.add(gitHubPullRequest);
