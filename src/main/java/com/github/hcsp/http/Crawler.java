@@ -45,8 +45,8 @@ public class Crawler {
                 Document document = Jsoup.parse(html);
                 ArrayList<Element> pulls = document.select(".Box-row");
                 for (Element element : pulls) {
-                    int number = Integer.parseInt(element.child(0).child(1).child(0).attr("href").substring(21));
-                    String title = element.child(0).child(1).child(0).text();
+                    int number = Integer.parseInt(element.child(0).child(1).child(0).attr("href").substring(20));
+                    String title = element.child(0).child(1).child(0).text() + " ";
                     String author = element.select("[data-hovercard-type=user]").text();
                     GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
                     list.add(gitHubPullRequest);
