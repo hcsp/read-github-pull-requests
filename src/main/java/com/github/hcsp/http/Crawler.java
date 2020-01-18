@@ -18,6 +18,7 @@ public class Crawler {
     public static void main(String[] args) throws IOException {
         System.out.println(getFirstPageOfPullRequests("gradle/gradle"));
     }
+
     static class GitHubPullRequest {
         // Pull request的编号
         int number;
@@ -33,10 +34,11 @@ public class Crawler {
         }
     }
 
-    static  class GitHubListPullRequestResponse{
-        static class User{
+    static class GitHubListPullRequestResponse {
+        static class User {
             String login;
-            public String getLogin(){
+
+            public String getLogin() {
                 return login;
             }
         }
@@ -80,14 +82,14 @@ public class Crawler {
         HttpGet httpGet = new HttpGet(PullURL);
         CloseableHttpResponse response = httpclient.execute(httpGet);
         HttpEntity PullEntity = response.getEntity();
-        String responseJson = IOUtils.toString(PullEntity.getContent(),"UTF-8");
+        String responseJson = IOUtils.toString(PullEntity.getContent(), "UTF-8");
 
 
         List<GitHubListPullRequestResponse> gitHubListPullRequestResponses =
                 JSON.parseArray(responseJson, GitHubListPullRequestResponse.class);
 
 
-return gitHubListPullRequestResponses.stream().map(y -> new GitHubPullRequest(y.getNumber(),y.getTitle(),
-        y.getUser().getLogin())).collect(Collectors.toList());
+        return gitHubListPullRequestResponses.stream().map(y -> new GitHubPullRequest(y.getNumber(), y.getTitle(),
+                y.getUser().getLogin())).collect(Collectors.toList());
     }
 }
