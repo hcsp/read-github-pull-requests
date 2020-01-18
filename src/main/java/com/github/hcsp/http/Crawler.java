@@ -63,7 +63,7 @@ public class Crawler {
             this.title = title;
         }
 
-        public User getUser() {
+        public GitHubListPullRequestResponse.User getUser() {
             return user;
         }
 
@@ -84,10 +84,8 @@ public class Crawler {
         HttpEntity PullEntity = response.getEntity();
         String responseJson = IOUtils.toString(PullEntity.getContent(), "UTF-8");
 
-
         List<GitHubListPullRequestResponse> gitHubListPullRequestResponses =
                 JSON.parseArray(responseJson, GitHubListPullRequestResponse.class);
-
 
         return gitHubListPullRequestResponses.stream().map(y -> new GitHubPullRequest(y.getNumber(), y.getTitle(),
                 y.getUser().getLogin())).collect(Collectors.toList());
