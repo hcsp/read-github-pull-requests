@@ -35,21 +35,21 @@ public class Crawler {
         }
     }
 
-//     给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
+    //     给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        List<GitHubPullRequest> list=new ArrayList<>();
+        List<GitHubPullRequest> list = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://api.github.com/repos/"+repo+"/pulls");
+        HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls");
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
         try {
             //System.out.println(response1.getStatusLine());
             HttpEntity entity1 = response1.getEntity();
-            InputStream content=entity1.getContent();
+            InputStream content = entity1.getContent();
             String result = IOUtils.toString(content, StandardCharsets.UTF_8);
-            JSONArray JsonArray= new JSONArray(result);
-            for(int i=0;i<JsonArray.length();++i){
-                JSONObject obj=JsonArray.getJSONObject(i);
-                GitHubPullRequest pullRequest=new GitHubPullRequest(obj.getInt("number"),obj.getString("title"),obj.getJSONObject("user").getString("login"));
+            JSONArray JsonArray = new JSONArray(result);
+            for (int i = 0; i < JsonArray.length(); ++i) {
+                JSONObject obj = JsonArray.getJSONObject(i);
+                GitHubPullRequest pullRequest = new GitHubPullRequest(obj.getInt("number"), obj.getString("title"), obj.getJSONObject("user").getString("login"));
                 list.add(pullRequest);
             }
             EntityUtils.consume(entity1);
