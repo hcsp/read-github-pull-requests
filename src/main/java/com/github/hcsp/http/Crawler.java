@@ -32,7 +32,7 @@ public class Crawler {
         JSONArray jsonArray = JSONArray.parseArray(json);
 
         for (int i = 0; i < pullRequestNumber; i++) {
-            int number = Integer.parseInt(jsonArray.getJSONObject(i).getString("number"));
+            int number = jsonArray.getJSONObject(i).getInteger("number");
             String title = jsonArray.getJSONObject(i).getString("title");
             String author = jsonArray.getJSONObject(i).getJSONObject("user").getString("login");
             GitHubPullRequest githubpullrequest = new GitHubPullRequest(number, title, author);
