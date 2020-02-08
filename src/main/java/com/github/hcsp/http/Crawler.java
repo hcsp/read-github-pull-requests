@@ -1,5 +1,22 @@
 package com.github.hcsp.http;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
@@ -19,5 +36,24 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+            int pullRequestNumber = 5;
+            ArrayList<GitHubPullRequest> list = new ArrayList<>();
+            String url = "https://api.github.com/repos/" + repo + "/pulls?page=1&per_page=5";
+            String json = Jsoup.connect(url).ignoreContentType(true).execute().body();
+        System.out.println(json);
+            JSONArray jsonArray = JSONArray.parseArray(json);
+            for (int i = 0; i < pullRequestNumber; i++) {
+                int number = jsonArray.getJSONObject(i).getInteger("number");
+                String title = jsonArray.getJSONObject(i).getString("title");
+                String author = jsonArray.getJSONObject(i).getJSONObject("user").getString("login");
+                GitHubPullRequest githubpullrequest = new GitHubPullRequest(number, title, author);
+                list.add(githubpullrequest);
+            }
+            return list;
+    }
+
+    public static void main(String[] args) throws IOException {
+        getFirstPageOfPullRequests("gradle/gradle");
+    }
 }
