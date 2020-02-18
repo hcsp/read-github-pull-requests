@@ -36,7 +36,7 @@ public class Crawler {
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/issues");
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
         List<GitHubPullRequest> gpr = new ArrayList<>();
         System.out.println(response1.getStatusLine());
