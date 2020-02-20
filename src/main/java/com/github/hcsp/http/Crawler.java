@@ -82,31 +82,31 @@ public class Crawler {
 
     }*/
 
-   //第二种方法 访问api
-   public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-       List<GitHubPullRequest> res = new ArrayList<>();
-       CloseableHttpClient httpclient = HttpClients.createDefault();
-       String html = "https://api.github.com/repos/" + repo + "/pulls";
-       HttpGet httpGet = new HttpGet(html);
-       CloseableHttpResponse response1 = httpclient.execute(httpGet);
-       System.out.println(response1);
-       HttpEntity entity1 = response1.getEntity();
-       InputStream is = entity1.getContent();
-       //将input stream 变成 string
-       String string  = IOUtils.toString(is, "UTF-8");
-       JSONArray jsonArray = JSONArray.parseArray(string);
-       for(int i=0;i<jsonArray.size();i++){
-           int number = jsonArray.getJSONObject(i).getInteger("number");
-           String title = jsonArray.getJSONObject(i).getString("title");
-           String author = jsonArray.getJSONObject(0).getJSONObject("user").getString("login");
-           GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
-           res.add(gitHubPullRequest);
-       }
+    //第二种方法 访问api
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+        List<GitHubPullRequest> res = new ArrayList<>();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        String html = "https://api.github.com/repos/" + repo + "/pulls";
+        HttpGet httpGet = new HttpGet(html);
+        CloseableHttpResponse response1 = httpclient.execute(httpGet);
+        System.out.println(response1);
+        HttpEntity entity1 = response1.getEntity();
+        InputStream is = entity1.getContent();
+        //将input stream 变成 string
+        String string = IOUtils.toString(is, "UTF-8");
+        JSONArray jsonArray = JSONArray.parseArray(string);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            int number = jsonArray.getJSONObject(i).getInteger("number");
+            String title = jsonArray.getJSONObject(i).getString("title");
+            String author = jsonArray.getJSONObject(0).getJSONObject("user").getString("login");
+            GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
+            res.add(gitHubPullRequest);
+        }
 
-       return res;
+        return res;
 
 
-   }
+    }
 
 
 }
