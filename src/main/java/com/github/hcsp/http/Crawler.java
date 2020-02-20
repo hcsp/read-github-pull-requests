@@ -34,7 +34,7 @@ public class Crawler {
         }
     }
 
-    // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
+    // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息。
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {
         List<GitHubPullRequest> list = new ArrayList<>();
         CloseableHttpClient httpClient = null;
