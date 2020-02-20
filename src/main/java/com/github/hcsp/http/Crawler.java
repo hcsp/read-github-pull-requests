@@ -7,12 +7,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import sun.nio.ch.IOUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,11 +27,6 @@ public class Crawler {
             this.title = title;
             this.author = author;
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        String repo = "hcsp/read-github-pull-requests";
-        getFirstPageOfPullRequests(repo);
     }
 
     // List<GitHubPullRequest>给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
@@ -81,7 +70,6 @@ public class Crawler {
         return res;
 
     }*/
-
     //第二种方法 访问api
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> res = new ArrayList<>();
@@ -102,11 +90,6 @@ public class Crawler {
             GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
             res.add(gitHubPullRequest);
         }
-
         return res;
-
-
     }
-
-
 }
