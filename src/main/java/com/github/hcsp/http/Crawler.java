@@ -1,5 +1,10 @@
 package com.github.hcsp.http;
 
+import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.service.PullRequestService;
+import org.eclipse.egit.github.core.service.RepositoryService;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
@@ -19,5 +24,19 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {
+        String[] url = repo.split("/");
+        RepositoryService service = new RepositoryService();
+        PullRequestService pullRequestService = new PullRequestService();
+        List<GitHubPullRequest> list = new ArrayList<>();
+        List<PullRequest> pullRequests = pullRequestService.getPullRequests(service.getRepository(url[0], url[1]), "ALL");
+        PullRequest pr = null;
+        int i = 0;
+        while (i < 10) {
+            pr = pullRequests.get(i);
+            list.add(new GitHubPullRequest(pr.getNumber(), pr.getTitle(), pr.getBase().getUser().getLogin()));
+            i++;
+        }
+        return list;
+    }
 }
