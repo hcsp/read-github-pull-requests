@@ -4,6 +4,7 @@ import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.service.PullRequestService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +23,12 @@ public class Crawler {
             this.author = author;
         }
     }
+    public static void main(String[] args) throws IOException {
+        getFirstPageOfPullRequests("gradle/gradle");
+    }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {
+    static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         String[] url = repo.split("/");
         RepositoryService service = new RepositoryService();
         PullRequestService pullRequestService = new PullRequestService();
