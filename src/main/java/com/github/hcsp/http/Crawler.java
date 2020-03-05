@@ -23,6 +23,7 @@ public class Crawler {
             this.author = author;
         }
     }
+
     public static void main(String[] args) throws IOException {
         getFirstPageOfPullRequests("gradle/gradle");
     }
@@ -38,7 +39,7 @@ public class Crawler {
         int i = 0;
         while (i < 10) {
             pr = pullRequests.get(i);
-            list.add(new GitHubPullRequest(pr.getNumber(), pr.getTitle(), pr.getBase().getUser().getLogin()));
+            list.add(new GitHubPullRequest(pr.getNumber(), pr.getTitle(), pr.getUser().getLogin()));
             i++;
         }
         return list;
