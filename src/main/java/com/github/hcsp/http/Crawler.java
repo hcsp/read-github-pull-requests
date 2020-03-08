@@ -2,15 +2,12 @@ package com.github.hcsp.http;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -57,7 +54,7 @@ public class Crawler {
 //            System.out.println(theString);
             StringWriter writer = new StringWriter();
             IOUtils.copy(is, writer, "UTF-8");
-            String html = writer.toString();//在这里拿到了html的响应
+            String html = writer.toString();
 //            System.out.println(theString);
             Document doc = Jsoup.parse(html);
             //           System.out.println(doc);
