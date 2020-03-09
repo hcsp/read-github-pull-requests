@@ -59,9 +59,8 @@ public class Crawler {
                 href = href.substring(href.lastIndexOf("/") + 1);
                 int num = Integer.valueOf(href);
                 // autor
-                String author = element.child(0).child(1).child(3).child(0).select(".muted-link").attr("title").replace("Open pull requests created by ", "");
+                String author = element.child(0).child(1).select(".muted-link").first().text();
                 gitHubPullRequests.add(new GitHubPullRequest(num, title, author));
-                break;
             }
             EntityUtils.consume(entity);
         } finally {
@@ -70,4 +69,8 @@ public class Crawler {
         return gitHubPullRequests;
     }
 
+    public static void main(String[] args) throws IOException {
+        List<GitHubPullRequest> firstPageOfPullRequests = getFirstPageOfPullRequests("gradle/gradle");
+        System.out.println(firstPageOfPullRequests);
+    }
 }
