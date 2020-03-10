@@ -18,7 +18,7 @@ class OutBean{
         int number;
         String title;
 
-        InBean inBean;
+        //InBean inBean;
 
         class InBean {
             private String author;
@@ -35,7 +35,7 @@ class OutBean{
             public String toString() {
                 return "InBean{" +
                         "author='" + author + '\'' +
-                        '}' + inBean.toString();
+                        '}';
             }
         }
 
