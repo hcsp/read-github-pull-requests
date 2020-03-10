@@ -7,7 +7,7 @@ import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GitHub;
 
 public class CrawlerTest {
-    @Test
+   /* @Test
     public void test() throws IOException {
         String repo = "gradle/gradle";
         Crawler.GitHubPullRequest firstPull = Crawler.getFirstPageOfPullRequests(repo).get(0);
@@ -17,5 +17,5 @@ public class CrawlerTest {
 
         Assertions.assertEquals(pull.getTitle(), firstPull.title);
         Assertions.assertEquals(pull.getUser().getLogin(), firstPull.author);
-    }
+    }*/
 }
