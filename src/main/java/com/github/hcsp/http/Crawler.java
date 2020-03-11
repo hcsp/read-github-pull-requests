@@ -12,24 +12,24 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 
-class OutBean{
-        int number;
-        String title;
+class OutBean {
+    int number;
+    String title;
 
-        InBean user;
+    InBean user;
 
-        class InBean {
-            String login;
+    class InBean {
+        String login;
 
-            @Override
-            public String toString() {
-                return "InBean{" +
-                        "login='" + login + '\'' +
-                        '}';
-            }
+        @Override
+        public String toString() {
+            return login;
         }
+    }
 
     public int getNumber() {
         return number;
@@ -72,19 +72,28 @@ public class Crawler {
             this.title = title;
             this.author = author;
         }
-
     }
 
     public static void main(String[] args) throws IOException {
+        getFirstPageOfPullRequests("gradle/gradle");
+    }
+
+    // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
+
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://api.github.com/repos/gradle/gradle/pulls");
+        HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls");
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
+
+        ArrayList<GitHubPullRequest> list = new ArrayList<>();
 
         try {
             System.out.println(response1.getStatusLine());
             HttpEntity entity1 = response1.getEntity();
+
             // do something useful with the response body
             // and ensure it is fully consumed
+
             InputStream is = entity1.getContent();
 
             StringWriter writer = new StringWriter();
@@ -93,11 +102,10 @@ public class Crawler {
 
             Gson gson = new Gson();
 
-
             OutBean[] beans = gson.fromJson(theString, OutBean[].class);
 
             for (OutBean bean : beans) {
-                System.out.println(bean);
+                list.add(new GitHubPullRequest(bean.getNumber(), bean.getTitle(), bean.user.login));
             }
 
         } catch (IOException e) {
@@ -105,13 +113,8 @@ public class Crawler {
         } finally {
             response1.close();
         }
+
+        return list;
+
     }
-    // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-/*
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {
-
-    }*/
-
-
-
 }
