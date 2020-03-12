@@ -1,5 +1,19 @@
 package com.github.hcsp.http;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
@@ -19,5 +33,37 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+        ArrayList<GitHubPullRequest> list = new ArrayList();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://github.com/"+repo+"/pulls");
+        CloseableHttpResponse response1 = httpclient.execute(httpGet);
+        try {
+            System.out.println(response1.getStatusLine());
+            HttpEntity entity1 = response1.getEntity();
+            // do something useful with the response body
+            // and ensure it is fully consumed
+            InputStream inputStream = entity1.getContent();
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
+            String str = writer.toString();
+            Document doc = Jsoup.parse(str);
+            ArrayList<Element> issues = doc.select(".js-issue-row");
+            for (Element issue : issues) {
+                String title = issue.child(0).child(1).child(0).text();
+                String nameAndNumber = issue.child(0).child(1).child(3).child(0).text();
+                String[] strings = nameAndNumber.split(" ");
+                int number = Integer.parseInt(strings[0].substring(1));
+                String name = strings[strings.length - 1];
+                list.add(new GitHubPullRequest(number, title, name));
+            }
+
+            EntityUtils.consume(entity1);
+        } finally {
+            response1.close();
+        }
+        return list;
+
+    }
+
 }
