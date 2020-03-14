@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
+    private static final int PULL_REQUESTS_PER_PAGE = 25;
+
     static class GitHubPullRequest {
         // Pull request的编号
         int number;
@@ -43,9 +45,8 @@ public class Crawler {
             InputStream is = entity.getContent();
             String body = IOUtils.toString(is, "UTF-8");
             JSONArray jsonArray = JSON.parseArray(body);
-            for (Object obj : jsonArray) {
-                JSONObject jsonObject = (JSONObject) obj;
-                list.add(getPullRequest(jsonObject));
+            for (int i = 0; i < PULL_REQUESTS_PER_PAGE; i++) {
+                list.add(getPullRequest(jsonArray.getJSONObject(i)));
             }
         } finally {
             response.close();
@@ -61,4 +62,5 @@ public class Crawler {
         String author = segments[segments.length - 1];
         return new GitHubPullRequest(number, title, author);
     }
+
 }
