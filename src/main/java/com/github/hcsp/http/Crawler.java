@@ -12,6 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,9 @@ public class Crawler {
         CloseableHttpResponse response = httpclient.execute(httpGet);
 
         try {
+
             HttpEntity entity = response.getEntity();
-            String jsonStr = IOUtils.toString(entity.getContent(), "UTF-8");
+            String jsonStr = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
             List<Map<String, Object>> mapList = JSON.parseObject(jsonStr, new TypeReference<List<Map<String, Object>>>() {});
             for (Map<String, Object> map : mapList) {
                 JSONObject userMap = (JSONObject) map.get("user");
