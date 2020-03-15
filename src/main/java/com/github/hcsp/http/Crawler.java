@@ -40,21 +40,16 @@ public class Crawler {
         HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls?page=1");
         CloseableHttpResponse response = httpclient.execute(httpGet);
 
-        try {
-
-            HttpEntity entity = response.getEntity();
-            String jsonStr = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
-            List<Map<String, Object>> mapList = JSON.parseObject(jsonStr, new TypeReference<List<Map<String, Object>>>() {});
-            for (Map<String, Object> map : mapList) {
-                JSONObject userMap = (JSONObject) map.get("user");
-                resultL.add(new GitHubPullRequest(Integer.parseInt(map.get("number").toString()), map.get("title").toString(), userMap.get("login").toString()));
-            }
-
-            EntityUtils.consume(entity);
-        } finally {
-            response.close();
+        HttpEntity entity = response.getEntity();
+        String jsonStr = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
+        List<Map<String, Object>> mapList = JSON.parseObject(jsonStr, new TypeReference<List<Map<String, Object>>>() {});
+        for (Map<String, Object> map : mapList) {
+            JSONObject userMap = (JSONObject) map.get("user");
+            resultL.add(new GitHubPullRequest(Integer.parseInt(map.get("number").toString()), map.get("title").toString(), userMap.get("login").toString()));
         }
 
+        EntityUtils.consume(entity);
+        response.close();
         return resultL;
     }
 }
