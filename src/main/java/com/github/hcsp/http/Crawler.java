@@ -57,7 +57,7 @@ public class Crawler {
         } finally {
             response1.close();
         }
-        return null;
+        return list;
     }
 
 //    public static void main(String[] args) throws IOException {
