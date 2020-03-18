@@ -1,20 +1,5 @@
 package com.github.hcsp.http;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
@@ -34,32 +19,5 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
-        CloseableHttpResponse response1 = httpclient.execute(httpGet);
-        try {
-            System.out.println(response1.getStatusLine());
-            HttpEntity entity1 = response1.getEntity();
-            InputStream is = entity1.getContent();
-
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(is, writer, "UTF-8");
-            String html = writer.toString();
-            Document doc = Jsoup.parse(html);
-            ArrayList<GitHubPullRequest> pullRequest = new ArrayList<>();
-
-            ArrayList<Element> content = new Elements(doc).select("div[class=\"flex-auto min-width-0 lh-condensed p-2 pr-3 pr-md-2\"]");
-            for (Element element : content) {
-                int pullid = Integer.parseInt(element.select("span[class=\"opened-by\"]").text().substring(1, 6));
-                String pullauthor = element.select("span[class=\"opened-by\"]").select("a").text();
-                String pulltitle = element.select(".h4").text();
-                pullRequest.add(new GitHubPullRequest(pullid, pulltitle, pullauthor));
-            }
-            return pullRequest;
-        } finally {
-            response1.close();
-        }
-    }
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
 }
-
