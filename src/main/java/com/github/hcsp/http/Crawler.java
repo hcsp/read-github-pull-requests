@@ -2,15 +2,20 @@ package com.github.hcsp.http;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.io.IOException;;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class Crawler {
@@ -35,13 +40,38 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {
-        return request(buildBody(repo));
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+        final String token = "b1293a5899baa10f3f678b9ffabef5c26b6ca506";
+        List<GitHubPullRequest> result = new ArrayList<>();
+
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost("https://api.github.com/graphql");
+        StringEntity entity = new StringEntity(buildBody(repo));
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.addHeader("Content-Type", "application/json");
+        httpPost.addHeader("Authorization", String.format("bearer %s", token));
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        JsonNode json = new ObjectMapper().readTree(EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
+        Iterator<JsonNode> iterator = json.get("data").get("repository").get("pullRequests").get("nodes").elements();
+        while (iterator.hasNext()) {
+            JsonNode pull = iterator.next();
+            result.add(new GitHubPullRequest(
+                    pull.get("number").asInt(),
+                    pull.get("title").asText(),
+                    pull.get("author").get("login").asText())
+            );
+        }
+
+        response.close();
+        client.close();
+        return result;
     }
 
     private static String buildBody(String repo) {
-        final var PAGE_SIZE = 25;
-        final var query = String.join(System.getProperty("line.separator"),
+        final int PAGE_SIZE = 25;
+        final String query = String.join(System.getProperty("line.separator"),
                 "query {",
                 "    repository (owner: \"%s\", name: \"%s\") {",
                 "        pullRequests (first: %d, states: OPEN, orderBy: { field: CREATED_AT, direction: DESC }) {",
@@ -60,38 +90,5 @@ public class Crawler {
             e.printStackTrace();
         }
         return "";
-    }
-
-    private static List<GitHubPullRequest> request(String body) {
-        final var result = new ArrayList<GitHubPullRequest>();
-        final var token = "eb75cc7cb7317d4d7e1a4cacf2a7e90036edaa7d";
-
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.github.com/graphql"))
-                .header("Content-Type", "application/json")
-                .header("Authorization", String.format("bearer %s", token))
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build();
-
-        try {
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            var json = new ObjectMapper().readTree(response.body());
-            var iterator = json.get("data").get("repository").get("pullRequests").get("nodes").elements();
-            while (iterator.hasNext()) {
-                var pull = iterator.next();
-                result.add(new GitHubPullRequest(
-                        pull.get("number").asInt(),
-                        pull.get("title").asText(),
-                        pull.get("author").get("login").asText())
-                );
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return result;
     }
 }
