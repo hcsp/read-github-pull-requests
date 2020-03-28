@@ -7,7 +7,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -63,22 +62,15 @@ public class Crawler {
                     String author = jsonObject.getJSONObject("user").getString("login");
                     GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
                     pullRequestList.add(gitHubPullRequest);
-                    System.out.println(number);
                 }
 
             } finally {
                 IOUtils.closeQuietly(contentStream);
             }
-            // do something useful with the response body
-            // and ensure it is fully consumed
         } finally {
             response1.close();
         }
         return pullRequestList;
     }
-
-//    public static void main(String[] args) throws IOException {
-//        getFirstPageOfPullRequests("golang/go");
-//    }
 
 }
