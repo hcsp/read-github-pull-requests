@@ -48,8 +48,8 @@ public class Crawler {
             int statusCode = response1.getStatusLine().getStatusCode();
             System.out.println(statusCode);
             if (200 != statusCode) {
-                // TODO 状态码不对需要进一步处理
-                return null;
+                // 状态码不对需要进一步处理
+                return pullRequestList;
             }
             HttpEntity entity1 = response1.getEntity();
             InputStream contentStream = entity1.getContent();
