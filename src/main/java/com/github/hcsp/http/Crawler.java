@@ -2,6 +2,7 @@ package com.github.hcsp.http;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -45,10 +46,9 @@ public class Crawler {
         CloseableHttpResponse response1 = httpclient.execute(httpGet, context);
         try {
             int statusCode = response1.getStatusLine().getStatusCode();
-            System.out.println(statusCode);
-            if (200 != statusCode) {
+            if (!String.valueOf(statusCode).startsWith("2")) {
                 // 状态码不对需要进一步处理
-                return pullRequestList;
+                throw new HttpResponseException(statusCode, response1.getStatusLine().toString());
             }
             HttpEntity entity1 = response1.getEntity();
             InputStream contentStream = entity1.getContent();
