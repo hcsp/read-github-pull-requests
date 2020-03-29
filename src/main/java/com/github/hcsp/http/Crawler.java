@@ -35,7 +35,7 @@ public class Crawler {
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("https://github.com/gradle/gradle/pulls");
-        httpGet.addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36 Edg/80.0.361.69");
+        httpGet.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36 Edg/80.0.361.69");
         CloseableHttpResponse response = httpclient.execute(httpGet);
         try {
             //System.out.println(response.getStatusLine());
@@ -44,16 +44,16 @@ public class Crawler {
             // and ensure it is fully consumed
             //EntityUtils.consume(entity1);
             InputStream is = entity1.getContent();
-            String html = IOUtils.toString(is,"UTF-8");
+            String html = IOUtils.toString(is, "UTF-8");
             Document doc = Jsoup.parse(html);
             ArrayList<Element> pr = doc.select(".Box-row--focus-gray");
             ArrayList<GitHubPullRequest> list = new ArrayList<>();
-            for(Element element:pr){
+            for (Element element : pr){
                 String title = element.select(".lh-condensed").select(".link-gray-dark").eachText().toString();   //title
                 int num =Integer.parseInt(element.select(".lh-condensed").select(".opened-by").get(0).childNode(0).toString().split(" ")[1].split("#")[1]);
                 String author = element.select(".lh-condensed").select(".opened-by").select(".muted-link").eachText().toString(); //by
-                list.add(new GitHubPullRequest(num,title,author));
-//                System.out.println(num);
+                list.add(new GitHubPullRequest(num, title, author));
+//              mvn clean verify  System.out.println(num);
 //                System.out.println(Integer.parseInt(element.select(".lh-condensed").select(".opened-by").get(0).childNode(0).toString().split(" ")[1].split("#")[1]));
 
             }
