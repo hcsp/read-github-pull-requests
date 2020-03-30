@@ -45,10 +45,9 @@ public class Crawler {
         Document document = Jsoup.parse(html);
         Elements elementsByClass = document.getElementsByClass("js-issue-row");
         for (Element element : elementsByClass) {
-            Element child = element.child(0).child(1);
-            String title = child.child(0).text();
-            String author = child.child(3).child(0).child(1).text();
-            int number = parseInt(child.child(3).child(0).textNodes().get(0).text().replaceAll("\\D", ""));
+            int number = parseInt(element.attr("id").split("_")[1]);
+            String title = element.getElementById(element.attr("id") + "_link").text();
+            String author = element.getElementsByClass("opened-by").get(0).getElementsByTag("a").get(0).text();
             list.add(new GitHubPullRequest(number, title, author));
         }
 
