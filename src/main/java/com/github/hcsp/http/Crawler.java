@@ -1,13 +1,5 @@
 package com.github.hcsp.http;
 
-import org.kohsuke.github.GHIssue;
-import org.kohsuke.github.GHIssueState;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
@@ -27,15 +19,5 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        List<GitHubPullRequest> gitHubPullRequestList = new ArrayList<>();
-        GitHub gitHub = GitHub.connectAnonymously();
-        GHRepository ghRepository = gitHub.getRepository(repo);
-        List<GHPullRequest> issues = ghRepository.getPullRequests(GHIssueState.OPEN);
-
-        for (GHIssue issue : issues) {
-            gitHubPullRequestList.add(new GitHubPullRequest(issue.getNumber(), issue.getTitle(), issue.getUser().getLogin()));
-        }
-        return gitHubPullRequestList;
-    }
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
 }
