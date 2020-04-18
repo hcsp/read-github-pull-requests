@@ -38,7 +38,7 @@ public class Crawler {
 
         List<GitHubPullRequest> list = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("http://github.com/" + repo + "/pulls");
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
         CloseableHttpResponse response = httpclient.execute(httpGet);
 
         try {
@@ -48,12 +48,12 @@ public class Crawler {
 
             Document doc = Jsoup.parse(result);
             Elements issues = doc.select(".js-issue-row");
-            for (Element element : issues) {
-                String title = element.select(".lh-condensed").select("a").get(0).text();
-                String[] issueMsg = element.select(".opened-by").get(0).text().split(" ");
-                String number = issueMsg[0].substring(1);
-                String author = issueMsg[issueMsg.length - 1];
-                list.add(new GitHubPullRequest(Integer.parseInt(number), title, author));
+            for (Element issueItem : issues) {
+                String title = issueItem.select(".js-navigation-open").get(0).text();
+                String[] strings = issueItem.select(".opened-by").get(0).text().split(" ");
+                String name = strings[strings.length - 1];
+                int id = Integer.valueOf(strings[0].substring(1));
+                list.add(new GitHubPullRequest(id, title, name));
 
             }
             EntityUtils.consume(entity);
@@ -70,5 +70,4 @@ public class Crawler {
             e.printStackTrace();
         }
     }
-
 }
