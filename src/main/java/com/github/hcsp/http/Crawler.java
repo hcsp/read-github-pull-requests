@@ -14,11 +14,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Integer.parseInt;
 
 public class Crawler {
     static class GitHubPullRequest {
@@ -38,29 +35,40 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+
+        List<GitHubPullRequest> list = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
+        HttpGet httpGet = new HttpGet("http://github.com/" + repo + "/pulls");
         CloseableHttpResponse response = httpclient.execute(httpGet);
-        ArrayList<GitHubPullRequest> list = new ArrayList<>();
+
         try {
-            System.out.println(response.getStatusLine());
-            HttpEntity entity1 = response.getEntity();
-            // do something useful with the response body
-            // and ensure it is fully consumed
-            InputStream is = entity1.getContent();
-            String html = IOUtils.toString(is, StandardCharsets.UTF_8);
-            Document doc = Jsoup.parse(html);
-            ArrayList<Element> elements = doc.select(".js-issue-row");
-            for (Element element : elements) {
-                int number = Integer.parseInt(element.child(0).child(1).child(0).attr("href").substring(20));
-                String title = element.child(0).child(1).child(0).text();
-                String author = element.select("[data-hovercard-type=user]").text();
-                GitHubPullRequest gitHubPullRequest = new GitHubPullRequest(number, title, author);
-                list.add(gitHubPullRequest);
+            HttpEntity entity = response.getEntity();
+            InputStream inputStream = entity.getContent();
+            String result = IOUtils.toString(inputStream, "UTF-8");
+
+            Document doc = Jsoup.parse(result);
+            Elements issues = doc.select(".js-issue-row");
+            for (Element element : issues) {
+                String title = element.select(".lh-condensed").select("a").get(0).text();
+                String[] issueMsg = element.select(".opened-by").get(0).text().split(" ");
+                String number = issueMsg[0].substring(1);
+                String author = issueMsg[issueMsg.length - 1];
+                list.add(new GitHubPullRequest(Integer.parseInt(number), title, author));
+
             }
+            EntityUtils.consume(entity);
         } finally {
             response.close();
         }
         return list;
     }
+
+    public static void main(String[] args) {
+        try {
+            getFirstPageOfPullRequests("gradle/gradle");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
