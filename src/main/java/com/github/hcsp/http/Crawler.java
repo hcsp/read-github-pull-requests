@@ -50,28 +50,21 @@ public class Crawler {
             Document document = Jsoup.parse(html);
 
 
-//            ArrayList<Element> issues = document.select(".js-issue-row");
-//            for (Element element : issues) {
-//                //这个就是number
-//                System.out.println(element.child(0).child(1).child(0).attr("id"));
-//                //title
-//                System.out.println(element.child(0).child(1).child(0).text());
-//                //author
-//                System.out.println(element.child(0).child(1).child(3).child(0).text());
-
             result = new ArrayList<>();
             ArrayList<Element> issues = document.select(".js-issue-row");
             for (Element element : issues) {
                 // 在这里，创建一个新的GitHubPullRequest对象,然后把对应信息填充进去
                 String number = element.child(0).child(1).child(0).attr("id");
+                number = number.replaceAll("[^\\d.]", "");
                 int numberInt = Integer.parseInt(number);
+
+
                 String title = element.child(0).child(1).child(0).text();
                 String author = element.child(0).child(1).child(3).child(0).text();
 
                 GitHubPullRequest pullRequest = new GitHubPullRequest(numberInt, title, author);
                 result.add(pullRequest);
-                System.out.println(result);
-
+//                System.out.println(result);
             }
 
         } finally {
@@ -83,15 +76,15 @@ public class Crawler {
     }
 }
 
+//            System.out.println(document);
 
-
-
-
-
-
-
-
-
-
+//            ArrayList<Element> issues = document.select(".js-issue-row");
+//            for (Element element : issues) {
+//                //这个就是number
+//                System.out.println(element.child(0).child(1).child(0).attr("id"));
+//                //title
+//                System.out.println(element.child(0).child(1).child(0).text());
+//                //author
+//                System.out.println(element.child(0).child(1).child(3).child(0).text());
 
 
