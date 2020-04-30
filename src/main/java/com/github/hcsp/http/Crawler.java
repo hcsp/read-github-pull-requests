@@ -61,10 +61,12 @@ public class Crawler {
 
                 String title = element.child(0).child(1).child(0).text();
                 String author = element.child(0).child(1).child(3).child(0).text();
+                String author1 = author.substring(0, author.indexOf("by"));
+                String author2 = author.substring(author1.length() + 2, author.length());
 
-                GitHubPullRequest pullRequest = new GitHubPullRequest(numberInt, title, author);
+
+                GitHubPullRequest pullRequest = new GitHubPullRequest(numberInt, title, author2);
                 result.add(pullRequest);
-//                System.out.println(result);
             }
 
         } finally {
@@ -75,16 +77,3 @@ public class Crawler {
 
     }
 }
-
-//            System.out.println(document);
-
-//            ArrayList<Element> issues = document.select(".js-issue-row");
-//            for (Element element : issues) {
-//                //这个就是number
-//                System.out.println(element.child(0).child(1).child(0).attr("id"));
-//                //title
-//                System.out.println(element.child(0).child(1).child(0).text());
-//                //author
-//                System.out.println(element.child(0).child(1).child(3).child(0).text());
-
-
