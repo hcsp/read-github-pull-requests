@@ -71,7 +71,7 @@ public class Crawler {
                 GitHubPullRequest pullRequest = new GitHubPullRequest(numberInt, title, author);
                 result.add(pullRequest);
                 System.out.println(result);
-//
+
             }
 
         } finally {
