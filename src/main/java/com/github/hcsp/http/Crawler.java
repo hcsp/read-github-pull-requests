@@ -1,5 +1,19 @@
 package com.github.hcsp.http;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.kohsuke.github.GHObject;
+import org.kohsuke.github.GHPullRequest;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
@@ -19,5 +33,31 @@ public class Crawler {
     }
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
-    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) {}
+    public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+        List<GitHubPullRequest> result = new ArrayList<>();
+        List<GHPullRequest> responseList = sendRequestAndGetResponse(repo);
+        for (GHPullRequest ghPullRequest : responseList) {
+            result.add(new GitHubPullRequest(ghPullRequest.getNumber(), ghPullRequest.getTitle(), ghPullRequest.getUser().getLogin()));
+        }
+        return result;
+    }
+
+    public static List<GHPullRequest> sendRequestAndGetResponse(String repo) throws IOException {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://api.github.com/repos/" + repo + "/pulls?page=1");
+        CloseableHttpResponse response = httpclient.execute(httpGet);
+        try {
+            HttpEntity entity = response.getEntity();
+            String responseStr = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+            List<GHPullRequest> list = JSON.parseArray(responseStr, GHPullRequest.class);
+            System.out.println(list);
+            return list;
+        } finally {
+            response.close();
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        getFirstPageOfPullRequests("gradle/gradle");
+    }
 }
