@@ -11,12 +11,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
+
     static class GitHubPullRequest {
         // Pull request的编号
         int number;
@@ -59,27 +61,41 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
+
         List<GitHubPullRequest> list = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
-        try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-            HttpEntity httpEntity = response.getEntity();
-            InputStream inputStream = httpEntity.getContent();
+
+        CloseableHttpResponse response = httpclient.execute(httpGet);
+
+        try {
+            HttpEntity entity = response.getEntity();
+            InputStream inputStream = entity.getContent();
             String result = IOUtils.toString(inputStream, "UTF-8");
 
             Document doc = Jsoup.parse(result);
             Elements issues = doc.select(".js-issue-row");
             for (Element issueItem : issues) {
-                String title = issueItem.select(".js-navigation-open").get(0).text();
-                String[] strings = issueItem.select(".opened-by").get(0).text().split(" ");
-                String name = strings[strings.length - 1];
-                int id = Integer.parseInt(strings[0].substring(1));
-                list.add(new GitHubPullRequest(id, title, name));
-
-            }
-            EntityUtils.consume(httpEntity);
+        String title = issueItem.select(".js-navigation-open").get(0).text();
+        String[] strings = issueItem.select(".opened-by").get(0).text().split(" ");
+        String name = strings[strings.length - 1];
+        int id = Integer.valueOf(strings[0].substring(1));
+        list.add(new GitHubPullRequest(id, title, name));
+        }
+        EntityUtils.consume(entity);
+        } finally {
+        response.close();
         }
         return list;
-    }
+        }
 
-}
+public static void main(String[] args) {
+        try {
+        getFirstPageOfPullRequests("gradle/gradle");
+        } catch (IOException e) {
+        e.printStackTrace();
+        }
+        }
+
+
+        }
