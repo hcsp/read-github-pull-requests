@@ -20,12 +20,6 @@ import java.util.List;
 public class Crawler {
 
     static class GitHubPullRequest {
-        // Pull request的编号
-        int number;
-        // Pull request的标题
-        String title;
-        // Pull request的作者的 GitHub 用户名
-        String author;
 
         public int getNumber() {
             return number;
@@ -51,6 +45,14 @@ public class Crawler {
             this.author = author;
         }
 
+        // Pull request的编号
+        int number;
+        // Pull request的标题
+        String title;
+        // Pull request的作者的 GitHub 用户名
+        String author;
+
+
         GitHubPullRequest(int number, String title, String author) {
             this.number = number;
             this.title = title;
@@ -66,36 +68,24 @@ public class Crawler {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
 
-        CloseableHttpResponse response = httpclient.execute(httpGet);
-
-        try {
-            HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent();
+        try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
+            HttpEntity httpEntity = response.getEntity();
+            InputStream inputStream = httpEntity.getContent();
             String result = IOUtils.toString(inputStream, "UTF-8");
 
             Document doc = Jsoup.parse(result);
             Elements issues = doc.select(".js-issue-row");
             for (Element issueItem : issues) {
-        String title = issueItem.select(".js-navigation-open").get(0).text();
-        String[] strings = issueItem.select(".opened-by").get(0).text().split(" ");
-        String name = strings[strings.length - 1];
-        int id = Integer.valueOf(strings[0].substring(1));
-        list.add(new GitHubPullRequest(id, title, name));
-        }
-        EntityUtils.consume(entity);
-        } finally {
-        response.close();
+                String title = issueItem.select(".js-navigation-open").get(0).text();
+                String[] strings = issueItem.select(".opened-by").get(0).text().split(" ");
+                String name = strings[strings.length - 1];
+                int id = Integer.parseInt(strings[0].substring(1));
+                list.add(new GitHubPullRequest(id, title, name));
+
+            }
+            EntityUtils.consume(httpEntity);
         }
         return list;
-        }
+    }
 
-public static void main(String[] args) {
-        try {
-        getFirstPageOfPullRequests("gradle/gradle");
-        } catch (IOException e) {
-        e.printStackTrace();
-        }
-        }
-
-
-        }
+}
