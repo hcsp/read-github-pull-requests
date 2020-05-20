@@ -38,7 +38,7 @@ public class Crawler {
         List<GitHubPullRequest> res = new ArrayList<>();
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/" + repo + "/pulls");
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
         try {
             System.out.println(response1.getStatusLine());
@@ -52,9 +52,9 @@ public class Crawler {
             Document document = Jsoup.parse(html);
             ArrayList<Element> issues = document.select(".js-issue-row");
             for (Element element : issues) {
-                int number = Integer.valueOf(element.child(0).child(1).child(0).attr("id").replaceAll("[^\\d.]", ""));
+                int number = Integer.valueOf(element.id().split("_")[1]);
                 String title = element.child(0).child(1).child(0).text();
-                String author = element.child(0).child(1).child(3).child(0).text();
+                String author = element.child(0).select(".mt-1").select(".muted-link").text().split(" ")[0];
                 res.add(new GitHubPullRequest(number, title, author));
             }
 
