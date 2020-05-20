@@ -10,7 +10,6 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,16 +46,16 @@ public class Crawler {
             // do something useful with the response body
             // and ensure it is fully consumed
             InputStream is = entity1.getContent();
-            String html = IOUtils.toString(is,"UTF-8");
+            String html = IOUtils.toString(is, "UTF-8");
 
             // jsoup
             Document document = Jsoup.parse(html);
-            ArrayList<Element> issues =  document.select(".flex-auto min-width-0 lh-condensed p-2 pr-3 pr-md-2");
-            for(Element element : issues){
-                int number = Integer.valueOf(element.child(4).child(0).text().substring(1,6));
+            ArrayList<Element> issues = document.select(".flex-auto min-width-0 lh-condensed p-2 pr-3 pr-md-2");
+            for (Element element : issues) {
+                int number = Integer.valueOf(element.child(4).child(0).text().substring(1, 6));
                 String title = element.child(0).text();
                 String author = element.child(4).child(0).child(1).text();
-                res.add(new GitHubPullRequest(number,title,author));
+                res.add(new GitHubPullRequest(number, title, author));
             }
 
             EntityUtils.consume(entity1);
