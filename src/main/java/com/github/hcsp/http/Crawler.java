@@ -50,12 +50,12 @@ public class Crawler {
             Document doc = Jsoup.parse(html);
             Elements issues = doc.select(".js-issue-row");
 
-            for (Element element:issues) {
+            for (Element element : issues) {
                 String title = element.select(".js-navigation-open").get(0).text();
                 String[] strings = element.select(".opened-by").get(0).text().split(" ");
-                String name = strings[strings.length-1];
+                String name = strings[strings.length - 1];
                 int id = Integer.valueOf(strings[0].substring(1));
-                list.add(new GitHubPullRequest(id,title,name));
+                list.add(new GitHubPullRequest(id, title, name));
             }
             EntityUtils.consume(entity);
         } finally {
