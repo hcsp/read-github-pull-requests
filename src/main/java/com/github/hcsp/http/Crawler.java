@@ -61,7 +61,6 @@ public class Crawler {
         } finally {
             response.close();
         }
-
         return list;
     }
 
