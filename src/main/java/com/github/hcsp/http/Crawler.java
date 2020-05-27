@@ -7,12 +7,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.http.impl.client.HttpClients.createDefault;
 
 public class Crawler {
     static class GitHubPullRequest {
@@ -35,8 +35,8 @@ public class Crawler {
         JSONObject jsonObject;
         List<GitHubPullRequest> list = new ArrayList<>();
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("http://github.com/" + repo + "/pulls");
+        CloseableHttpClient httpclient = createDefault();
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
         CloseableHttpResponse response = httpclient.execute(httpGet);
 
         HttpEntity entity = response.getEntity();
@@ -55,4 +55,7 @@ public class Crawler {
         return list;
     }
 
+    public static void main(String[] args) throws IOException {
+        getFirstPageOfPullRequests("gradle/gradle");
+    }
 }
