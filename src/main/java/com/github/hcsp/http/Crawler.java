@@ -49,7 +49,7 @@ public class Crawler {
             Document document = Jsoup.parse(html);
             Elements issues = document.select(".js-issue-row");
             for (Element element : issues) {
-                String title = element.select(".ja-navigation-open").get(0).text();
+                String title = element.select(".js-navigation-open").get(0).text();
                 String[] strings = element.select(".opened-by").get(0).text().split(" ");
                 String name = strings[strings.length - 1];
                 int id = Integer.valueOf(strings[0].substring(1));
@@ -64,7 +64,7 @@ public class Crawler {
         return list;
     }
 
-    public static void main(String[] args) {
-        
+    public static void main(String[] args)  {
+
     }
 }
