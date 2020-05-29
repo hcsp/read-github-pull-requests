@@ -31,8 +31,8 @@ public class Crawler {
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> list = new ArrayList<>();
         String url = "https://github.com/" + repo + "/pulls";
-        Connection conn = Jsoup.connect(url); // 建立与url中页面的连接
-        Document doc = conn.get(); // 解析页面
+        Connection conn = Jsoup.connect(url);
+        Document doc = conn.get();
         Elements links = doc.select("div[class=Box-row Box-row--focus-gray p-0 mt-0 js-navigation-item js-issue-row]");
         for (Element link : links) {
             String textSpan = link.select("span[class=opened-by]").text();
