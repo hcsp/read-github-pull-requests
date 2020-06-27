@@ -60,10 +60,10 @@ public class Crawler {
 
             String[] newInfo = info.split(" ");
 
-            Integer number = Integer.parseInt(newInfo[0].substring(1,newInfo[0].length()));
+            Integer number = Integer.parseInt(newInfo[0].substring(1, newInfo[0].length()));
             System.out.println(number);
 
-            pullInfo.add(new GitHubPullRequest(number,title,author));
+            pullInfo.add(new GitHubPullRequest(number, title, author));
 
         }
 
