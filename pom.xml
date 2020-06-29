@@ -70,12 +70,6 @@
             <version>5.6.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.kohsuke</groupId>
-            <artifactId>github-api</artifactId>
-            <version>1.95</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>
