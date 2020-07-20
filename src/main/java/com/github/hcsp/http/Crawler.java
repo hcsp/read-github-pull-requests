@@ -50,7 +50,7 @@ public class Crawler {
             for (Object object : objects) {
                 String title = (String) ((JSONObject) object).get("title");
                 int number = (int) ((JSONObject) object).get("number");
-                JSONObject user = ((JSONObject) ((JSONObject) object).get("user"));
+                JSONObject user = (JSONObject) ((JSONObject) object).get("user");
                 String author = (String) user.get("login");
                 Reslist.add(new GitHubPullRequest(number, title, author));
             }
@@ -60,5 +60,4 @@ public class Crawler {
         }
         return Reslist;
     }
-
 }
