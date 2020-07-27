@@ -1,4 +1,5 @@
 package com.github.hcsp.http;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -35,14 +36,14 @@ public class Crawler {
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/issues");
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
         CloseableHttpResponse response = httpclient.execute(httpGet);
         List<GitHubPullRequest> myList = new ArrayList<>();
         try {
             HttpEntity entity = response.getEntity();
             InputStream is = entity.getContent();
-            String HtmlString = IOUtils.toString(is, StandardCharsets.UTF_8);
-            Document doc = Jsoup.parse(HtmlString);
+            String Html = IOUtils.toString(is, StandardCharsets.UTF_8);
+            Document doc = Jsoup.parse(Html);
             Elements issues = doc.select(".js-issue-row");
             for (int i = 0; i < issues.size(); i++) {
                 String title = issues.get(i).child(0).child(1).child(0).text();
@@ -55,6 +56,5 @@ public class Crawler {
         }
         return myList;
     }
-
 }
 
