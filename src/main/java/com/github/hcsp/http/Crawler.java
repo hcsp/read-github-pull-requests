@@ -8,6 +8,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Crawler {
     static class GitHubPullRequest {
@@ -36,7 +37,6 @@ public class Crawler {
             JSONObject user = (JSONObject) ((JSONObject) object).get("user");
             String author = (String) user.get("login");
             Reslist.add(new GitHubPullRequest(number, title, author));
-
         }
         return  Reslist;
     }
@@ -54,7 +54,7 @@ public class Crawler {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            return Objects.requireNonNull(response.body()).string();
         }
     }
 }
