@@ -42,7 +42,6 @@ public class Crawler {
     }
 
     public static void main(String[] args) throws IOException {
-//        getFirstPageOfPullRequests("gradle/gradlradle");
         System.out.println( getFirstPageOfPullRequests("gradle/gradle"));
     }
 
