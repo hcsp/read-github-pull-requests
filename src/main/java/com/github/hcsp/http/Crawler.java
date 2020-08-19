@@ -43,13 +43,13 @@ public class Crawler {
             String author = (String) ((JSONObject) user).get("login");
             int number = (int) (((JSONObject) object).get("number"));
             list.add(new GitHubPullRequest(number, title, author));
-            System.out.println("request的编号为：" + number + "。request的标题为：" + title + "。GitHub 用户名为：" + author + "。");
+           // System.out.println("request的编号为：" + number + "。request的标题为：" + title + "。GitHub 用户名为：" + author + "。");
         }
         return list;
     }
 
     public static void main(String[] args) throws IOException {
         String repo = "gradle/gradle";
-        getFirstPageOfPullRequests(repo);
+        System.out.println(getFirstPageOfPullRequests(repo));
     }
 }
