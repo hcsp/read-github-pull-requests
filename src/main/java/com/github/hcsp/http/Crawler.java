@@ -44,17 +44,12 @@ public class Crawler {
         JSONArray array = JSONArray.parseArray(string);//使用fastjson的方法转成一个json的数组
         for (Object object : array) {//遍历数组，得到想要的数据
             String title = (String) ((JSONObject) object).get("title");
-            Object user = ((JSONObject) object).get("user");
-            String author = (String) ((JSONObject) user).get("login");
+                Object user = ((JSONObject) object).get("user");
+                String author = (String) ((JSONObject) user).get("login");
             int number = (int) (((JSONObject) object).get("number"));
             list.add(new GitHubPullRequest(number, title, author));
             // System.out.println("request的编号为：" + number + "。request的标题为：" + title + "。GitHub 用户名为：" + author + "。");
         }
         return list;
-    }
-
-    public static void main(String[] args) throws IOException {
-        String repo = "gradle/gradle";
-        System.out.println(getFirstPageOfPullRequests(repo));
     }
 }
