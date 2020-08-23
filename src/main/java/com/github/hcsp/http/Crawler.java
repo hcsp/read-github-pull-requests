@@ -24,15 +24,10 @@ public class Crawler {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        String REQUEST_URL = "https://github.com/gradle/gradle/pulls";
-        getFirstPageOfPullRequests(REQUEST_URL);
-    }
-
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> requestList = new ArrayList<>();
-        Document document = Jsoup.connect(repo).get();
+        Document document = Jsoup.connect("https://github.com/" + repo + "/pulls").get();
         ArrayList<Element> elementList = document.select(".js-issue-row");
 
         for (Element element : elementList) {
