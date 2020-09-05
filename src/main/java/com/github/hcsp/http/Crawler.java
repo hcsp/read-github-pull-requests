@@ -3,6 +3,7 @@ package com.github.hcsp.http;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        Document document = Jsoup.connect(repo).get();
+        Document document = Jsoup.connect("https://github.com/gradle/gradle/pulls").get();
         ArrayList<Element> selecteddiv = document.select(".js-issue-row");
         List<GitHubPullRequest> gitHubPullRequestslist = new ArrayList<>();
         for (Element element : selecteddiv) {
