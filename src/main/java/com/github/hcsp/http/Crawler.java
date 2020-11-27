@@ -36,26 +36,28 @@ public class Crawler {
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         //使用HttpClient获取html
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/"+repo+"/pulls");
-//        HttpGet httpGet = new HttpGet("https://www.wbomb.cn/");
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
         List<GitHubPullRequest> list = new ArrayList<>();
         try {
-            System.out.println(response1.getStatusLine());
             HttpEntity entity1 = response1.getEntity();
-            // do something useful with the response body
-            // and ensure it is fully consumed
             //获取Input stream
             InputStream is = entity1.getContent();
             String html = IOUtils.toString(is, "UTF-8");
             Document document = Jsoup.parse(html);
             ArrayList<Element> pr = document.select(".js-issue-row");
 
-            for(Element element: pr){
+            for (Element element : pr) {
                 String numberStr = element.attr("id");
                 int number = Integer.parseInt(numberStr.substring(6));
                 String title = element.child(0).child(1).child(0).text();
-                String author = element.child(0).child(1).child(3).child(0).child(1).text();
+                String classTitle = element.child(0).child(1).child(2).attr("class");
+                String author;
+                if (classTitle.equals("labels lh-default d-block d-md-inline")) {
+                    author = element.child(0).child(1).child(3).child(0).child(1).text();
+                } else {
+                    author = element.child(0).child(1).child(2).child(0).child(1).text();
+                }
                 list.add(new GitHubPullRequest(number, title, author));
             }
             //关闭实体
