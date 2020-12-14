@@ -72,9 +72,9 @@ public class Crawler {
                         )
                 );
             }
+            return pullRequest;
         } finally {
             response.close();
         }
-        return pullRequest;
     }
 }
