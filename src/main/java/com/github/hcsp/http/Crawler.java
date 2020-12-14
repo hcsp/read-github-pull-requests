@@ -64,7 +64,7 @@ public class Crawler {
                 pullRequest.add(
                         new GitHubPullRequest(
                                 //获取编号element.child(0).child(1).child(3).child(0).text()属于特定页面
-                                Integer.getInteger(element.select("span[class=\"opened-by\"]").text().substring(1, 6)),
+                                Integer.parseInt(element.select("span[class=\"opened-by\"]").text().substring(1, 6)),
                                 //获取标题element.child(0).child(1).child(0).text()属于特定页面
                                 element.select(".h4").text(),
                                 //获取作者element.child(0).child(1).child(3).child(0).child(1).text()属于特定页面
