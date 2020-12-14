@@ -39,7 +39,8 @@ public class Crawler {
         //1.1、创建一个客户端 【httpcomponents maven得来】
         CloseableHttpClient httpclient = HttpClients.createDefault();
         //1.2、设置请求方式，这里是Get请求【httpcomponents maven得来】
-        HttpGet httpGet = new HttpGet("https://github.com/golang/go/pulls");
+        HttpGet httpGet = new HttpGet("https://github.com/" + repo + "/pulls");
+
         //1.3、用httpclient客户端去执行httpGet请求。拿到response1响应
         CloseableHttpResponse response = httpclient.execute(httpGet);
 
