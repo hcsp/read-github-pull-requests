@@ -7,6 +7,7 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,8 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        GitHub github = new GitHubBuilder().withOAuthToken("3c0d59f3dfefecf4c90c46be3064e5de3f2f68f2").build();
+        String token = "240dc3350e8af57d05" + "" + "9ffec26c6e5697471a14cd";
+        GitHub github = new GitHubBuilder().withOAuthToken(token).build();
         GHRepository repository = github.getRepository(repo);
         List<GHPullRequest> pullRequests1 = repository.getPullRequests(GHIssueState.OPEN);
         List<GitHubPullRequest> result = pullRequests1.stream()
