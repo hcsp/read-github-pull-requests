@@ -28,7 +28,7 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        GitHub github = new GitHubBuilder().withOAuthToken("df0e2e7b133cfaf8297b9838bdd35af1e93b2b3b").build();
+        GitHub github = new GitHubBuilder().withOAuthToken("3c0d59f3dfefecf4c90c46be3064e5de3f2f68f2").build();
         GHRepository repository = github.getRepository(repo);
         List<GHPullRequest> pullRequests1 = repository.getPullRequests(GHIssueState.OPEN);
         List<GitHubPullRequest> result = pullRequests1.stream()
