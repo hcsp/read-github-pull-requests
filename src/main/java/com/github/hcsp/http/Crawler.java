@@ -37,7 +37,7 @@ public class Crawler {
         List<GitHubPullRequest> list = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
         String repoUrl = "https://github.com/" + repo + "/pulls";
-        HttpGet httpGet = new HttpGet("https://github.com/gradle/gradle/pulls");
+        HttpGet httpGet = new HttpGet(repoUrl);
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
         try {
             HttpEntity entity1 = response1.getEntity();
@@ -52,7 +52,7 @@ public class Crawler {
                         child(3).child(0).text().substring(1, 6));
                 String title = element.child(0).child(1).child(0).text();
                 String author = element.child(0).child(1).child(3).child(0).child(1).text();
-                GitHubPullRequest temp = new GitHubPullRequest(number, title, author);
+                GitHubPullRequest temp = new GitHubPullRequest(number,title,author);
                 list.add(temp);
             }
 
