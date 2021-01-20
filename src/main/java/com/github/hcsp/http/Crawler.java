@@ -34,34 +34,33 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        List<GitHubPullRequest> gitHubPullRequests = new ArrayList<>();
+
+        List<GitHubPullRequest> gitHubPullRequest = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://github.com/gradle/gradle/pulls");
+        HttpGet httpGet = new HttpGet("http://github.com/" + repo + "/pulls");
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
         try {
             HttpEntity entity1 = response1.getEntity();
             InputStream is = entity1.getContent();
             String html = IOUtils.toString(is, "UTF-8");
             Document document = Jsoup.parse(html);
-//            System.out.println(document);
 
             ArrayList<Element> issues = document.select(".js-issue-row");
 
             for (Element element : issues) {
-                String[] authorAndNumber = element.select(".opened-by").text().split("");
+                String[] authorAndNumber = element.select(".opened-by").text().split(" ");
                 int number = Integer.parseInt(authorAndNumber[0].replace("#", ""));
                 String author = authorAndNumber[authorAndNumber.length - 1];
                 String title = element.child(0).child(1).child(0).text();
                 GitHubPullRequest temp = new GitHubPullRequest(number, title, author);
-                gitHubPullRequests.add(temp);
+                gitHubPullRequest.add(temp);
             }
             EntityUtils.consume(entity1);
         } finally {
             response1.close();
         }
-        return gitHubPullRequests;
+        return gitHubPullRequest;
     }
 
 
 }
-
