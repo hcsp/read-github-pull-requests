@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Crawler {
+
     static class GitHubPullRequest {
         // Pull request的编号
         int number;
@@ -31,7 +32,7 @@ public class Crawler {
             this.author = author;
         }
     }
-    
+
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
 
         List<GitHubPullRequest> gitHubPullRequests = new ArrayList<>();
@@ -46,7 +47,7 @@ public class Crawler {
             String html = IOUtils.toString(content, "UTF-8");
             JSONArray pullRequests = JSON.parseArray(html);
 
-            for (int i = 0; i <pullRequests .size(); i++) {
+            for (int i = 0; i < pullRequests.size(); i++) {
                 JSONObject pr = pullRequests.getJSONObject(i);
                 Integer number = pr.getInteger("number");
                 String title = pr.getString("title");
@@ -54,8 +55,7 @@ public class Crawler {
                 gitHubPullRequests.add(new GitHubPullRequest(number, title, author));
             }
             EntityUtils.consume(entity1);
-        }
-        finally {
+        } finally {
             response1.close();
         }
         return gitHubPullRequests;
