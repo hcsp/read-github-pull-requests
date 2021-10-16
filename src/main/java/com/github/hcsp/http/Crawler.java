@@ -37,11 +37,11 @@ public class Crawler {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         // 发起了一个http Get请求
 
-        StringBuilder SB = new StringBuilder("https://api.github.com/repos/" + repo + "/issues");
+        StringBuilder target = new StringBuilder("https://api.github.com/repos/" + repo + "/issues");
 
-        System.out.println(SB);
+        System.out.println(target);
 
-        HttpGet httpGet = new HttpGet(String.valueOf(SB));
+        HttpGet httpGet = new HttpGet(String.valueOf(target));
 
 //        https://api.github.com/repos/hcsp/read-github-pull-requests/issues
         // 执行这个请求拿到response
@@ -68,7 +68,7 @@ public class Crawler {
     }
 
     public static List<GitHubPullRequest> traverse(JSONArray issuesInfoList) {
-        List<GitHubPullRequest> GPR =
+        List<GitHubPullRequest> pullRequestsList =
                 new ArrayList<GitHubPullRequest>();
         for (int i = 0; i < issuesInfoList.size(); i++) {
             JSONObject account = (JSONObject) issuesInfoList.getJSONObject(i).get("user");
@@ -77,9 +77,9 @@ public class Crawler {
                 String title = (String) issuesInfoList.getJSONObject(i).get("title");
                 String user = account.getString("login");
                 GitHubPullRequest gp = new GitHubPullRequest(number, title, user);
-                GPR.add(gp);
+                pullRequestsList.add(gp);
             }
         }
-        return GPR;
+        return pullRequestsList;
     }
 }
