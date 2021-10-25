@@ -40,11 +40,10 @@ public class Crawler {
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> gitHubPullRequests = new ArrayList<>();
-        String URL = "https://github.com/" + repo + "/pulls";
         //获取http客户端
         CloseableHttpClient httpclient = HttpClients.createDefault();
         //创建GET请求
-        HttpGet httpGet = new HttpGet(URL);
+        HttpGet httpGet = new HttpGet("https://github.com/gradle/gradle/pulls");
         // The underlying HTTP connection is still held by the response object
         // to allow the response content to be streamed directly from the network socket.
         // In order to ensure correct deallocation of system resources
