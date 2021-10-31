@@ -86,7 +86,7 @@ public class Crawler {
         return null;
     }
 
-    public static void main(String[] args) throws IOException {
+/*    public static void main(String[] args) throws IOException {
         getFirstPageOfPullRequests("gradle/gradle");
-    }
+    }*/
 }
