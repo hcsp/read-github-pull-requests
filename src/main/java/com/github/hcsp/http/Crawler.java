@@ -65,7 +65,7 @@ public class Crawler {
             ArrayList<Element> pr = document.select(".js-issue-row");
             for (Element eles : pr) {
                 //遍历数据得到 标题
-                String prtitle = eles.child(0).child(1).child(0).text() + "";
+                String prtitle = eles.child(0).child(1).child(0).text() + " ";
                 //System.out.println(prtitle);
                 //遍历数据得到 ：#18826 opened 12 hours ago by bamboo
                 String shuju = eles.child(0).child(1).children().last().child(0).text();
