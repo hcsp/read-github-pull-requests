@@ -44,7 +44,7 @@ public class Crawler {
         // connection cannot be safely re-used and will be shut down and discarded
         // by the connection manager.
         CloseableHttpResponse response1 = httpclient.execute(httpGet);
-        System.out.println(response1.getStatusLine());
+        //System.out.println(response1.getStatusLine());
         //System.out.println(response1.getCode() + " " + response1.getReasonPhrase());
         HttpEntity entity1 = response1.getEntity();
         // do something useful with the response body
@@ -65,18 +65,18 @@ public class Crawler {
             ArrayList<Element> pr = document.select(".js-issue-row");
             for (Element eles : pr) {
                 //遍历数据得到 标题
-                String prtitle = eles.child(0).child(1).child(0).text();
-                System.out.println(prtitle);
+                String prtitle = eles.child(0).child(1).child(0).text() + "";
+                //System.out.println(prtitle);
                 //遍历数据得到 ：#18826 opened 12 hours ago by bamboo
                 String shuju = eles.child(0).child(1).children().last().child(0).text();
                 //处理shuju， 得到编号
                 String[] str = shuju.split("\\s+");
                 String[] str2 = str[0].split("#");
                 int getnum = Integer.parseInt(str2[1]);
-                System.out.println(getnum);
+                //System.out.println(getnum);
                 //处理shuju， 得到名字
                 String getname = str[(str.length - 1)];
-                System.out.println(getname);
+                //System.out.println(getname);
                 //每得到一次就加到空列表中去
                 list.add(new GitHubPullRequest(getnum, prtitle, getname));
             }
