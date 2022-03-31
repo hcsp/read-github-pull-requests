@@ -1,6 +1,5 @@
 package com.github.hcsp.http;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,11 +14,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,15 +33,6 @@ public class Crawler {
             this.number = number;
             this.title = title;
             this.author = author;
-        }
-
-        @Override
-        public String toString() {
-            return "GitHubPullRequest{" +
-                    "number=" + number +
-                    ", title='" + title + '\'' +
-                    ", author='" + author + '\'' +
-                    '}';
         }
     }
 
@@ -74,19 +62,7 @@ public class Crawler {
     }
 
     public static void main(String[] args) throws IOException {
-        setProxy();
         System.out.println(getFirstPageOfPullRequests("gradle/gradle"));
-    }
-
-    private static void setProxy() {
-        String proxyHost = "127.0.0.1";
-        String proxyPort = "7890";
-        // 对 http 开启代理
-        System.setProperty("http.proxyHost", proxyHost);
-        System.setProperty("http.proxyPort", proxyPort);
-        // 对 https 也开启代理
-        System.setProperty("https.proxyHost", proxyHost);
-        System.setProperty("https.proxyPort", proxyPort);
     }
 
     public static int getNumbersFromString(String content) {
