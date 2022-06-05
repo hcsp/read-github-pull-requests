@@ -3,6 +3,9 @@ package com.github.hcsp.http;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -48,9 +51,14 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        //设置CookieSpecs.STANDARD的cookie解析模式，下面为源码，对应解析格式我给出了备注
+        CloseableHttpClient httpClient= HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
+
         HttpGet httpGet = new HttpGet("https://github.com/"+repo+"/pulls");
-        CloseableHttpResponse response = httpclient.execute(httpGet);
+        CloseableHttpResponse response = httpClient.execute(httpGet);
         try {
             System.out.println(response.getStatusLine());
             HttpEntity entity1 = response.getEntity();
