@@ -34,23 +34,21 @@ public class Crawler {
             this.author = author;
         }
     }
-    
+
     static String HOST = "https://github.com/";
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
         List<GitHubPullRequest> result = new ArrayList<>();
-        try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             final HttpGet httpGet = new HttpGet(HOST + repo + "/pulls");
-            try (final CloseableHttpResponse response = httpclient.execute(httpGet)) {
+            try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
                 System.out.println(response.getCode() + " " + response.getReasonPhrase());
                 final HttpEntity entity = response.getEntity();
                 InputStream is = entity.getContent();
                 String html = CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8));
-//                System.out.println("html = " + html);
                 Document doc = Jsoup.parse(html);
                 Elements issues = doc.select(".js-issue-row");
-//                System.out.println("issues = " + issues);
                 for (Element issue : issues) {
                     int number = Integer.parseInt(issue.select(".opened-by").text().substring(1, 6));
                     String title = issue.select(".markdown-title").text();
