@@ -3,6 +3,7 @@ package com.github.hcsp.http;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -89,7 +90,6 @@ public class Crawler {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return mapper.readValue(entity, new TypeReference<List<OriginalPullRequest>>() {
-        }).stream().map(item -> new GitHubPullRequest(item.number, item.title, item.user.login)).toList();
+        }).stream().map(item -> new GitHubPullRequest(item.number, item.title, item.user.login)).collect(Collectors.toList());
     }
-
 }
