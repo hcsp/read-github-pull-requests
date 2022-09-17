@@ -69,7 +69,9 @@ public class Crawler {
                         if (entity == null) {
                             return null;
                         }
-                        return EntityUtils.toString(entity);
+                        String ret = EntityUtils.toString(entity);
+                        EntityUtils.consume(entity);
+                        return ret;
                     } catch (final ParseException ex) {
                         throw new ClientProtocolException(ex);
                     }
