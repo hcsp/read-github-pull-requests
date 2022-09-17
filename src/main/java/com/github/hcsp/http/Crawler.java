@@ -47,7 +47,7 @@ public class Crawler {
         // Pull request的作者的 GitHub 用户名
         String author;
 
-        public GitHubPullRequest(int number, String title, String author) {
+        GitHubPullRequest(int number, String title, String author) {
             this.number = number;
             this.title = title;
             this.author = author;
