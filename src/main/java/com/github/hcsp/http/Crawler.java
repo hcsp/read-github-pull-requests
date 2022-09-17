@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NoArgsConstructor;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -22,16 +21,11 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 
 public class Crawler {
-    @NoArgsConstructor
     static class User {
         public String login;
 
-        public User(String login) {
-            this.login = login;
-        }
     }
 
-    @NoArgsConstructor
     static class OriginalPullRequest {
         @JsonProperty("number")
         int number;
@@ -42,11 +36,6 @@ public class Crawler {
         @JsonProperty("user")
         User user;
 
-        public OriginalPullRequest(int number, String title, User user) {
-            this.number = number;
-            this.title = title;
-            this.user = user;
-        }
     }
 
     static class GitHubPullRequest {
@@ -67,7 +56,7 @@ public class Crawler {
 
     // 给定一个仓库名，例如"golang/go"，或者"gradle/gradle"，返回第一页的Pull request信息
     public static List<GitHubPullRequest> getFirstPageOfPullRequests(String repo) throws IOException {
-        try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             final HttpGet httpget = new HttpGet("https://api.github.com/repos/" + repo + "/pulls");
             System.out.println("Executing request " + httpget.getMethod() + " " + httpget.getUri());
             // Create a custom response handler
