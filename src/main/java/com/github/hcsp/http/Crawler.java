@@ -40,7 +40,7 @@ public class Crawler {
             try (CloseableHttpResponse response = httpclient.execute(httpget)) {
                 HttpEntity entity = response.getEntity();
                 String responseBody = EntityUtils.toString(entity);
-                JSON.parseArray(responseBody).forEach( j -> {
+                JSON.parseArray(responseBody).forEach(j -> {
                     String user = ((JSONObject) j).getJSONObject("user").toString();
                     JSONObject username = JSONObject.parseObject(user);
                     result.add(new GitHubPullRequest(
