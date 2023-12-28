@@ -22,14 +22,14 @@
                 <pluginRepository>
                     <id>alimaven</id>
                     <name>aliyun maven</name>
-                    <url>https://maven.aliyun.com/repository/public/</url>
+                    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
                 </pluginRepository>
             </pluginRepositories>
             <repositories>
                 <repository>
                     <id>alimaven</id>
                     <name>aliyun maven</name>
-                    <url>https://maven.aliyun.com/repository/public/</url>
+                    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
                 </repository>
             </repositories>
         </profile>
@@ -55,7 +55,8 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.318</version>
+            <version>1.95</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -68,21 +69,6 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.6.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.17.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
         </dependency>
     </dependencies>
 
